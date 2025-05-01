@@ -13,7 +13,7 @@ export default class Model {
             this.data = [];
             fs.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
         } else {
-            this.data = JSON.parse(fs.readFileSync('./" + this.namespace + "/' + this.filename, { flag: "a+" }));
+            this.data = JSON.parse(fs.readFileSync("./" + this.namespace + "/" + this.filename, { flag: "a+" }));
         }
         if (!fs.existsSync("./" + this.namespace + "/history/" + this.logname)) {
             fs.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
@@ -55,6 +55,7 @@ export default class Model {
 
     create(element) {
         try {
+            this.addDefaultValue(element);
             this.checkFieldExist(element);
             this.checkFormat(element);
             this.checkRequired(element);
@@ -123,7 +124,7 @@ export default class Model {
                 }
             }
             else if (value.in) {
-                if(!this.checkInClause(element[field], value.like)){
+                if(!this.checkInClause(element[field], value.in)){
                     return false;
                 }
             }
@@ -135,22 +136,18 @@ export default class Model {
     }
 
     checkLikeClause(field, like) {
-        if (!typeof like !== "string") {
+        if (typeof like !== "string") {
             throw new Error("Like operator required an string value");
         }
         let regex = new RegExp(like.replaceAll('%', '.*'));
-        if (!regex.test(field)) {
-            return false;
-        }
+        return regex.test(field);
     }
 
     checkInClause(field, array){
         if (!Array.isArray(array)) {
             throw new Error("In operator required an array value");
         }
-        if (!array.includes(field)) {
-            return false;
-        }
+        return array.includes(field);
     }
 
     checkFormat(element) {
@@ -172,7 +169,7 @@ export default class Model {
     }
 
     checkRequired(element){
-        let required = this.schema.filter(property => property.required && property.required === true);
+        let required = Array.from(this.schema).filter(property => property.required && property.required === true);
         for(let [property,options] of Object.entries(required)){
             if(!element[property]){
                 throw new Error("Error : property " + property + " is required");
@@ -199,5 +196,14 @@ export default class Model {
             return false;
         }
         return true;
+    }
+
+    addDefaultValue(element){
+        for(let [property,value] of Object.entries(this.schema)){
+            if(value.defaultValue && !element[property]){
+                element[property]=value.defaultValue;
+                console.log(element[property]);
+            }
+        }
     }
 }

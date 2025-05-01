@@ -1,6 +1,6 @@
 const Operator = {
-    Like: "like",
-    Is: "is"
+    like: "like",
+    in: "in"
 }
 
 export default Operator;

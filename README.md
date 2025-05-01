@@ -4,6 +4,8 @@
 Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
 ```
 
+Api Documentation will come with v1
+
 **json-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
 It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
 Ideal for embedded systems, CLIs, quick prototyping, or educational use.

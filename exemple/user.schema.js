@@ -11,7 +11,8 @@ let User = database.createModel('user',{
     },
     password: {
         type: DataTypes.STRING(255),
-        required: true
+        required: true,
+        defaultValue: '123456654321'
     }
 });
 
