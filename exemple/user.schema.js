@@ -1,8 +1,7 @@
-import Jdb,{DataTypes} from "../src/index.js";
+import { DataTypes } from "../src/index.js";
+import { database } from "./connection.js";
 
-let database = new Jdb();
-
-let User = database.createModel('user',{
+let User = database.define('user', {
     email: {
         type: DataTypes.STRING(255),
         unique: true,

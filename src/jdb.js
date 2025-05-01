@@ -12,7 +12,7 @@ class Jdb {
             fs.mkdirSync('./' + this.namespace + '/history', {recursive: true});
         }
     }
-    createModel(name, schema) {
+    define(name, schema) {
         return new Model(name, schema, this.namespace);
     }
 }
