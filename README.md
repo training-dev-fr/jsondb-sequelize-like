@@ -1,0 +1,142 @@
+# json-sequelize-like – A lightweight JSON-based database with Sequelize-like syntax
+
+**json-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
+It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
+Ideal for embedded systems, CLIs, quick prototyping, or educational use.
+
+---
+
+## 🚀 Features
+
+- 💾 Flat-file JSON storage
+- 🧠 In-memory cache with periodic snapshot
+- ✍️ Append-only logging for safe writes
+- 🔍 SQL-like querying: `where`, `like`, `is`, etc.
+- 🧱 Schema definition with `DataTypes`, `unique`, and `validation`
+- 🎯 Auto-incrementing primary keys
+- ✅ Inspired by [Sequelize](https://sequelize.org) syntax
+- 🔒 No external dependencies
+
+---
+
+## 📦 Installation
+
+```bash
+npm install json-sequelize-like
+```
+
+*(Or clone the repo if not yet published to npm)*
+
+---
+
+## 🛠️ Basic Usage
+
+### 1. Define a model
+
+```js
+import Jdb, { DataTypes } from 'json-sequelize-like';
+
+const db = new Jdb();
+
+const User = db.createModel('user', {
+  email: {
+    type: DataTypes.STRING(255),
+    unique: true,
+    validate: /.*@.*/
+  },
+  password: {
+    type: DataTypes.STRING(255)
+  }
+});
+```
+
+---
+
+### 2. Create records
+
+```js
+User.create({
+  email: 'john.doe@example.com',
+  password: '123456'
+});
+```
+
+---
+
+### 3. Query data
+
+```js
+const allUsers = User.find(); // returns all users
+
+const filtered = User.find({
+  where: {
+    email: { like: '%@example.com' }
+  }
+});
+```
+
+---
+
+### 4. Validate types and uniqueness
+
+```js
+User.create({
+  email: 'invalid-email', // fails regex validation
+  password: 123456         // fails string type check
+});
+```
+
+---
+
+## 🧪 Schema options (current support)
+
+- `type`: required — one of `DataTypes.STRING(length)`, `DataTypes.NUMBER()`
+- `unique`: boolean — ensures uniqueness in the dataset
+- `validate`: RegExp — validates the input on insert
+- *(Planned)*: `required`, `default`, additional types (`BOOLEAN`, `DATE`, etc.)
+
+---
+
+## 💡 Philosophy
+
+The goal of `json-sequelize-like` is to offer a zero-dependency, file-based DB that mirrors the experience of Sequelize — so you can:
+- prototype fast,
+- ship lightweight apps (embedded, CLI, offline tools),
+- and switch to Sequelize + PostgreSQL later **without rewriting your models**.
+
+---
+
+## 📁 Data Storage Structure
+
+```
+project/
+├── data/
+│   ├── user.json          ← snapshot (state)
+│   └── log/
+│       └── user.txt       ← append-only log
+```
+
+Snapshots are periodically written to disk and logs are replayed if needed.
+
+---
+
+## 🛣️ Roadmap (v1.x)
+
+- [ ] Add support for `limit`, `offset`, `order` in `.find()`
+- [ ] Add `required` and `default` fields in schema
+- [ ] Support additional types: `BOOLEAN`, `DATE`, etc.
+- [ ] Operator object: `Op.like`, `Op.gt`, etc.
+- [ ] Optional case-insensitive matching and full-text
+- [ ] Schema-based normalization before insert
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+## 🙌 Author
+
+Aurélien Vaast – [GitHub](https://github.com/training-dev-fr/json-sequelize-like) – [trainingdev.fr](https://training-dev.fr) - [npm]
