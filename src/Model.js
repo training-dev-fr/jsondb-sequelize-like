@@ -2,20 +2,21 @@ import fs from "fs";
 import DeepSave from "./DeepSave.js";
 
 export default class Model {
-    constructor(name, schema) {
+    constructor(name, schema,namespace) {
         this.name = name;
         this.schema = schema;
         this.filename = name + ".json";
         this.logname = name + ".txt";
+        this.namespace = namespace;
         this.deepSave = new DeepSave(this.logname,this.filename,name);
-        if (!fs.existsSync("./data/" + this.filename)) {
+        if (!fs.existsSync("./" + this.namespace + "/" + this.filename)) {
             this.data = [];
-            fs.writeFileSync("./data/" + this.filename, "[]", { flag: "a+" });
+            fs.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
         } else {
-            this.data = JSON.parse(fs.readFileSync('./data/' + this.filename, { flag: "a+" }));
+            this.data = JSON.parse(fs.readFileSync('./" + this.namespace + "/' + this.filename, { flag: "a+" }));
         }
-        if (!fs.existsSync("./data/log/" + this.logname)) {
-            fs.writeFileSync("./data/log/" + this.logname, "", { flag: "a+" });
+        if (!fs.existsSync("./" + this.namespace + "/log/" + this.logname)) {
+            fs.writeFileSync("./" + this.namespace + "/log/" + this.logname, "", { flag: "a+" });
         }
         this.deepSaveLauncher();
 
@@ -24,7 +25,7 @@ export default class Model {
 
     save(operation, data) {
         try {
-            fs.appendFileSync("./data/log/" + this.logname, operation + " " + JSON.stringify(data) + "\n");
+            fs.appendFileSync("./" + this.namespace + "/log/" + this.logname, operation + " " + JSON.stringify(data) + "\n");
         } catch (e) {
             throw new Error(e.message);
         }
