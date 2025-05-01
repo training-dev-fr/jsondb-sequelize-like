@@ -9,8 +9,7 @@ class Jdb {
         this.namespace = namespace;
         this.encrypt = encrypt;
         if(!fs.existsSync('./' + this.namespace)){
-            //fs.mkdirSync('./' + this.namespace);
-            fs.mkdirSync('./' + this.namespace + '/log', {recursive: true});
+            fs.mkdirSync('./' + this.namespace + '/history', {recursive: true});
         }
     }
     createModel(name, schema) {

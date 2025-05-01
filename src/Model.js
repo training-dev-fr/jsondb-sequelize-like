@@ -15,8 +15,8 @@ export default class Model {
         } else {
             this.data = JSON.parse(fs.readFileSync('./" + this.namespace + "/' + this.filename, { flag: "a+" }));
         }
-        if (!fs.existsSync("./" + this.namespace + "/log/" + this.logname)) {
-            fs.writeFileSync("./" + this.namespace + "/log/" + this.logname, "", { flag: "a+" });
+        if (!fs.existsSync("./" + this.namespace + "/history/" + this.logname)) {
+            fs.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
         }
         this.deepSaveLauncher();
 
@@ -25,7 +25,7 @@ export default class Model {
 
     save(operation, data) {
         try {
-            fs.appendFileSync("./" + this.namespace + "/log/" + this.logname, operation + " " + JSON.stringify(data) + "\n");
+            fs.appendFileSync("./" + this.namespace + "/history/" + this.logname, operation + " " + JSON.stringify(data) + "\n");
         } catch (e) {
             throw new Error(e.message);
         }
