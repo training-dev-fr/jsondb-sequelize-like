@@ -1,5 +1,9 @@
 # json-sequelize-like – A lightweight JSON-based database with Sequelize-like syntax
 
+```
+Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
+```
+
 **json-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
 It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
 Ideal for embedded systems, CLIs, quick prototyping, or educational use.
@@ -24,8 +28,6 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 ```bash
 npm install json-sequelize-like
 ```
-
-*(Or clone the repo if not yet published to npm)*
 
 ---
 
@@ -102,7 +104,7 @@ User.create({
 The goal of `json-sequelize-like` is to offer a zero-dependency, file-based DB that mirrors the experience of Sequelize — so you can:
 - prototype fast,
 - ship lightweight apps (embedded, CLI, offline tools),
-- and switch to Sequelize + PostgreSQL later **without rewriting your models**.
+- and switch to Sequelize + Any SQL Database supported by sequelize later **without rewriting your models and queries at all**.
 
 ---
 
@@ -133,10 +135,10 @@ Snapshots are periodically written to disk and logs are replayed if needed.
 
 ## 📄 License
 
-MIT
+Custom : see LICENSE.md
 
 ---
 
 ## 🙌 Author
 
-Aurélien Vaast – [GitHub](https://github.com/training-dev-fr/json-sequelize-like) – [trainingdev.fr](https://training-dev.fr) - [npm]
+Aurélien Vaast – [GitHub](https://github.com/training-dev-fr/json-sequelize-like) – [trainingdev.fr](https://training-dev.fr) - [npm](https://www.npmjs.com/package/jsondb-sequelize-like)

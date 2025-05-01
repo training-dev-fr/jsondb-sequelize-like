@@ -1,11 +1,22 @@
 {
-  "name": "jdb",
-  "version": "1.0.0",
+  "name": "jsondb-sequelize-like",
+  "version": "0.1.22",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild src/index.js   --bundle --minify --outfile=dist/index.js --platform=node --format=cjs"
   },
   "author": "",
-  "license": "license.md"
+  "license": "license.md",
+  "devDependencies": {
+    "esbuild": "^0.25.3"
+  }
 }
