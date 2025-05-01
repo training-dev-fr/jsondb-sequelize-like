@@ -62,11 +62,12 @@ export default class Model {
         }
         const newElement = {
             ...element,
-            id: ++this.currentId
+            id: this.currentId+1
         };
         this.data.push(newElement);
         try {
             this.save("add", newElement);
+            this.currentId++;
         } catch (e) {
             this.data.pop();
             throw new Error(e.message);
