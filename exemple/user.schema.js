@@ -6,10 +6,12 @@ let User = database.createModel('user',{
     email: {
         type: DataTypes.STRING(255),
         unique: true,
-        validate: /.*@.*/
+        validate: /.*@.*/,
+        required: true
     },
     password: {
-        type: DataTypes.STRING(255)
+        type: DataTypes.STRING(255),
+        required: true
     }
 });
 

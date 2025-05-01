@@ -2,13 +2,13 @@ import fs from "fs";
 import DeepSave from "./DeepSave.js";
 
 export default class Model {
-    constructor(name, schema,namespace) {
+    constructor(name, schema, namespace) {
         this.name = name;
         this.schema = schema;
         this.filename = name + ".json";
         this.logname = name + ".txt";
         this.namespace = namespace;
-        this.deepSave = new DeepSave(this.logname,this.filename,name);
+        this.deepSave = new DeepSave(this.logname, this.filename, name);
         if (!fs.existsSync("./" + this.namespace + "/" + this.filename)) {
             this.data = [];
             fs.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
@@ -57,12 +57,13 @@ export default class Model {
         try {
             this.checkFieldExist(element);
             this.checkFormat(element);
+            this.checkRequired(element);
         } catch (e) {
             throw e;
         }
         const newElement = {
             ...element,
-            id: this.currentId+1
+            id: this.currentId + 1
         };
         this.data.push(newElement);
         try {
@@ -82,6 +83,7 @@ export default class Model {
         try {
             this.checkFieldExist(element);
             this.checkFormat(element);
+            this.checkRequired(element);
         } catch (e) {
             throw e;
         }
@@ -116,16 +118,12 @@ export default class Model {
                 value = parseInt(value);
             }
             if (value.like) {
-                let regex = new RegExp(value.like.replaceAll('%', '.*'));
-                if (!regex.test(element[field])) {
+                if(!this.checkLikeClause(element[field], value.like)){
                     return false;
                 }
             }
-            else if (value.is) {
-                if (!Array.isArray(value.is)) {
-                    throw new Error("Is operator required an array value");
-                }
-                if (!value.is.includes(element[field])) {
+            else if (value.in) {
+                if(!this.checkInClause(element[field], value.like)){
                     return false;
                 }
             }
@@ -134,6 +132,25 @@ export default class Model {
             }
         }
         return true;
+    }
+
+    checkLikeClause(field, like) {
+        if (!typeof like !== "string") {
+            throw new Error("Like operator required an string value");
+        }
+        let regex = new RegExp(like.replaceAll('%', '.*'));
+        if (!regex.test(field)) {
+            return false;
+        }
+    }
+
+    checkInClause(field, array){
+        if (!Array.isArray(array)) {
+            throw new Error("In operator required an array value");
+        }
+        if (!array.includes(field)) {
+            return false;
+        }
     }
 
     checkFormat(element) {
@@ -152,6 +169,15 @@ export default class Model {
             }
         }
         return true;
+    }
+
+    checkRequired(element){
+        let required = this.schema.filter(property => property.required && property.required === true);
+        for(let [property,options] of Object.entries(required)){
+            if(!element[property]){
+                throw new Error("Error : property " + property + " is required");
+            }
+        }
     }
 
     checkFieldExist(element) {
