@@ -1,7 +1,7 @@
 {
   "name": "jsondb-sequelize-like",
   "version": "0.1.33",
-  "repository":"https://github.com/training-dev-fr/jsondb-sequelize-like",
+  "repository": "https://github.com/training-dev-fr/jsondb-sequelize-like",
   "man": "./doc",
   "description": "",
   "main": "dist/index.js",
@@ -14,11 +14,12 @@
   "type": "module",
   "scripts": {
     "build": "esbuild src/index.js   --bundle --minify --outfile=dist/index.js --platform=node --format=cjs",
-    "doc": "jsdoc "
+    "doc": "jsdoc ./src -r -d docs"
   },
   "author": "",
   "license": "license.md",
   "devDependencies": {
-    "esbuild": "^0.25.3"
+    "esbuild": "^0.25.3",
+    "jsdoc": "^4.0.4"
   }
 }
