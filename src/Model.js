@@ -60,7 +60,7 @@ export default class Model {
             this.addDefaultValue(element);
             errorStack = errorStack.concat(this.checkFieldExist(element));
             errorStack = errorStack.concat(this.checkFormat(element));
-            this.checkRequired(element);
+            errorStack = errorStack.concat(this.checkRequired(element));
             errorStack = errorStack.concat(this.checkValidator(element));
             if(errorStack.length > 0){
                 throw new Error("Validation failed",{cause: errorStack});
