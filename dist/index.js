@@ -29,28 +29,292 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.js
 var index_exports = {};
 __export(index_exports, {
-  DataTypes: () => DataTypes_default,
+  DataTypes: () => DataTypes,
   Jdb: () => Jdb,
   Operator: () => Operator_default
 });
 module.exports = __toCommonJS(index_exports);
 
-// src/DataTypes.js
-var DataTypes = {
+// src/DataTypes/Boolean.js
+var Boolean = {
+  /**
+   * Boolean value, true or false
+   */
+  BOOLEAN: function() {
+    return {
+      type: "boolean"
+    };
+  }
+};
+
+// src/DataTypes/Date.js
+var Date2 = {
+  /**
+   * Date and time 
+   */
+  DATE: {
+    type: "date"
+  },
+  /**
+    * Date
+    */
+  DATEONLY: {
+    type: "date"
+  },
+  /**
+    * Time
+    */
+  TIME: {
+    type: "date"
+  },
+  /**
+   * Generate a new Date() for default value on insert and update queries
+   */
+  NOW: {
+    type: "Date.now",
+    get: () => {
+      return new Date2();
+    }
+  }
+};
+
+// src/DataTypes/Integer.js
+var Integer = {
+  /**
+   * Tiny integer
+   * @min -128
+   * @max 127
+   */
+  TINYINT: {
+    type: "number",
+    special: "integer",
+    min: -128,
+    max: 127,
+    /**
+     * Tiny unsigned integer
+     * @min 0
+     * @max 255
+     */
+    UNSIGNED: {
+      type: "number",
+      special: "integer",
+      min: 0,
+      max: 255
+    }
+  },
+  /**
+   * Small integer
+   * @min -32768
+   * @max 32767
+   */
+  SMALLINT: function() {
+    return {
+      type: "number",
+      special: "integer",
+      min: -32768,
+      max: 32767,
+      /**
+       * Small unsigned integer
+       * @min 0
+       * @max 65535
+       */
+      UNSIGNED: {
+        type: "number",
+        special: "integer",
+        min: 0,
+        max: 65535
+      }
+    };
+  },
+  /**
+   * Medium integer
+   * @min -8388608
+   * @max 8388607
+   */
+  MEDIUMINT: function() {
+    return {
+      type: "number",
+      special: "integer",
+      min: -8388608,
+      max: 8388607,
+      /**
+       * Medium unsigned integer
+       * @min 0
+       * @max 16777215
+       */
+      UNSIGNED: {
+        type: "number",
+        special: "integer",
+        min: 0,
+        max: 16777215
+      }
+    };
+  },
+  /**
+   * Integer
+   * @min -2147483648
+   * @max 2147483647
+   */
+  INTEGER: function() {
+    return {
+      type: "number",
+      special: "integer",
+      min: -2147483648,
+      max: 2147483647,
+      /**
+       * Unsigned integer
+       * @min 0
+       * @max 4294967295
+       */
+      UNSIGNED: {
+        type: "number",
+        special: "integer",
+        min: 0,
+        max: 4294967295
+      }
+    };
+  },
+  /**
+   * Big integer
+   * @min -2^63
+   * @max -2^63-1
+   */
+  BIGINT: function() {
+    return {
+      type: "number",
+      special: "integer",
+      min: -2e63,
+      max: 2e63 - 1,
+      /**
+       * Big unsigned integer
+       * @min 0
+       * @max 2e64 - 1
+       */
+      UNSIGNED: {
+        type: "number",
+        special: "integer",
+        min: 0,
+        max: 2e64 - 1
+      }
+    };
+  }
+};
+
+// src/DataTypes/Number.js
+var Number2 = {
+  /**
+   * Single precision floating point
+   */
+  FLOAT: function(precision = null, scale = null) {
+    const base = {
+      type: "number",
+      special: "float",
+      precision: 10,
+      scale: 2
+    };
+    if (precision !== null) {
+      base.precision = precision;
+    }
+    if (scale !== null) {
+      base.scale = scale;
+    }
+    return base;
+  },
+  /**
+   * Double precision floating point
+   */
+  Double: function(precision = null, scale = null) {
+    const base = {
+      type: "number",
+      special: "double",
+      precision: 10,
+      scale: 2
+    };
+    if (precision !== null) {
+      base.precision = precision;
+    }
+    if (scale !== null) {
+      base.scale = scale;
+    }
+    return base;
+  },
+  /**
+   * Decimal exact number
+   */
+  DECIMAL: function(precision = null, scale = null) {
+    const base = {
+      type: "number",
+      special: "decimal",
+      precision: 10,
+      scale: 2
+    };
+    if (precision !== null) {
+      base.precision = precision;
+    }
+    if (scale !== null) {
+      base.scale = scale;
+    }
+    return base;
+  }
+};
+Number2.FLOAT.UNSIGNED = function(precision = null, scale = null) {
+  let base = Number2.FLOAT(precision, scale);
+  base.min = 0;
+  return base;
+};
+Number2.DOUBLE.UNSIGNED = function(precision = null, scale = null) {
+  let base = Number2.DOUBLE(precision, scale);
+  base.min = 0;
+  return base;
+};
+Number2.DECIMAL.UNSIGNED = function(precision = null, scale = null) {
+  let base = Number2.DECIMAL(precision, scale);
+  base.min = 0;
+  return base;
+};
+
+// src/DataTypes/String.js
+var String = {
+  /**
+   * String, fixed max length, better for variable length
+   * @param {number} [value=255] Max length of string
+   */
   STRING: function(value) {
-    let type = { type: "string" };
+    let type = { type: "string", value: 255 };
     if (value) {
       type.max = value;
     }
     return type;
   },
-  NUMBER: function() {
+  /**
+   * Char, fixed max length, better for fix length
+   * @param {number} [value=255] Max length of string
+   */
+  CHAR: function(value) {
+    let type = { type: "string", value: 255 };
+    if (value) {
+      type.max = value;
+    }
+    return type;
+  },
+  /**
+   * Text, variable length
+   */
+  TEXT: function() {
     return {
-      type: "number"
+      type: "string"
     };
   }
 };
-var DataTypes_default = DataTypes;
+
+// src/DataTypes/DataTypes.js
+var DataTypes = {
+  ...String,
+  ...Integer,
+  ...Boolean,
+  ...Number2,
+  ...Date2
+};
 
 // src/Model.js
 var import_fs2 = __toESM(require("fs"), 1);

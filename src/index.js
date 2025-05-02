@@ -1,4 +1,4 @@
-import DataTypes from "./DataTypes.js";
+import {DataTypes} from "./DataTypes/DataTypes.js";
 import {Jdb} from "./jdb.js";
 import Operator from "./Operator.js";
 
