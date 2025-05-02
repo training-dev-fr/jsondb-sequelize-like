@@ -30,7 +30,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var index_exports = {};
 __export(index_exports, {
   DataTypes: () => DataTypes_default,
-  Jdb: () => jdb_default,
+  Jdb: () => Jdb,
   Operator: () => Operator_default
 });
 module.exports = __toCommonJS(index_exports);
@@ -436,10 +436,42 @@ var Model = class {
    * @returns All elements matching filtering conditions
    */
   findAll(options) {
-    if (!options.where && this.data.length > 0) {
+    if (this.data.length === 0) {
       return this.data;
     }
-    return this.data.filter((element) => this.checkWhereClause(element, options));
+    let result = this.data;
+    if (options.where) {
+      result = result.filter((element) => this.checkWhereClause(element, options));
+    }
+    if (options.order) {
+      result.sort((a, b) => {
+        for (let [property, order] of options.order) {
+          if (a[property] && !b[property]) {
+            return 1;
+          }
+          if (!a[property] && b[property]) {
+            return -1;
+          }
+          if (a[property] && b[property]) {
+            if (order === "DESC") {
+              if (a[property] !== b[property]) {
+                return a[property] < b[property] ? 1 : -1;
+              }
+            }
+            if (a[property] !== b[property]) {
+              return a[property] > b[property] ? 1 : -1;
+            }
+          }
+        }
+      });
+    }
+    if (options.offset) {
+      result = result.slice(options.offset);
+    }
+    if (options.limit) {
+      result = result.slice(0, options.limit);
+    }
+    return result;
   }
   /**
    * Read query to get the first element of a model.
@@ -697,7 +729,7 @@ var Jdb = class {
    * @param {number} [options.deepSaveTiming=300000] timing in milliseconds between two automatic deepSave
    * @param {string} [options.namespace=data] the path to the folder where data should be stored
    */
-  constructor({ namespace = "data", deepSaveTiming = 1e3 * 60 * 5 }) {
+  constructor({ namespace, deepSaveTiming } = { namespace: "data", deepSaveTiming: 1e3 * 60 * 5 }) {
     this.namespace = namespace;
     this.deepSaveTiming = deepSaveTiming;
     if (!import_fs3.default.existsSync("./" + this.namespace)) {
@@ -705,10 +737,9 @@ var Jdb = class {
     }
   }
   define(name, schema) {
-    return new Model_default(name, schema, this.namespace, this.deepSaveTiming);
+    return new Model_default(name, schema, { namespace: this.namespace, deepSaveTiming: this.deepSaveTiming });
   }
 };
-var jdb_default = Jdb;
 
 // src/Operator.js
 var Operator = {

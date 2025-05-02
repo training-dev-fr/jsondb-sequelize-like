@@ -2,7 +2,7 @@
 
 ⚠️ Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
 
-Documentation availables in [docs](https://training-dev-fr.github.io/jsondb-sequelize-like/){:target="_blank"} folder
+Documentation availables in <a href="https://training-dev-fr.github.io/jsondb-sequelize-like/">docs</a>[docs](https://training-dev-fr.github.io/jsondb-sequelize-like/){:target="_blank"} folder
 
 **jsondb-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
 It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
