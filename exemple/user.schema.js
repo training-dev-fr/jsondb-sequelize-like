@@ -5,7 +5,9 @@ let User = database.define('user', {
     email: {
         type: DataTypes.STRING(255),
         unique: true,
-        validate: /.*@.*/,
+        validate: {
+            is: /.*@.*/
+        },
         required: true
     },
     password: {

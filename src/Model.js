@@ -1,5 +1,6 @@
 import fs from "fs";
 import DeepSave from "./DeepSave.js";
+import { validate } from "./Validator.js";
 
 export default class Model {
     constructor(name, schema, namespace) {
@@ -59,9 +60,14 @@ export default class Model {
             this.checkFieldExist(element);
             this.checkFormat(element);
             this.checkRequired(element);
+            let errorStack = this.checkValidator(element);
+            if(errorStack.length > 0){
+                throw new Error("Validation failed",{cause: errorStack});
+            }
         } catch (e) {
             throw e;
         }
+
         const newElement = {
             ...element,
             id: this.currentId + 1
@@ -85,6 +91,7 @@ export default class Model {
             this.checkFieldExist(element);
             this.checkFormat(element);
             this.checkRequired(element);
+            this.checkValidator(element);
         } catch (e) {
             throw e;
         }
@@ -205,5 +212,15 @@ export default class Model {
                 console.log(element[property]);
             }
         }
+    }
+
+    checkValidator(element){
+        let errorStack = [];
+        for (let [property, value] of Object.entries(this.schema)) {
+            if (value.validate) {
+                errorStack = errorStack.concat(validate(element[property],property,value.validate));
+            }
+        }
+        return errorStack;
     }
 }
