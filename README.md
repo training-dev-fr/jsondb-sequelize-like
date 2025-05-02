@@ -126,13 +126,11 @@ Snapshots are periodically written to disk and logs are replayed if needed.
 
 ## 🛣️ Roadmap (v1.x)
 
-- [ ] Add support for `limit`, `offset`, `order` in `.find()`
-- [ ] Add `required` and `default` fields in schema
+- [x] Add support for `limit`, `offset`, `order` in `.find()`
+- [x] Add `allowNull` and `default` fields in schema
 - [ ] Support additional types: `BOOLEAN`, `DATE`, etc.
 - [ ] Operator object: `Op.like`, `Op.gt`, etc.
 - [ ] Optional case-insensitive matching and full-text
-- [ ] Schema-based normalization before insert
-
 ---
 
 ## 📄 License
