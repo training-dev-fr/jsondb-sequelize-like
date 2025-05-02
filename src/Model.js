@@ -8,7 +8,7 @@ export default class Model {
         this.filename = name + ".json";
         this.logname = name + ".txt";
         this.namespace = namespace;
-        this.deepSave = new DeepSave(this.logname, this.filename, name);
+        this.deepSave = new DeepSave(this.logname, this.filename, this.name, this.namespace);
         if (!fs.existsSync("./" + this.namespace + "/" + this.filename)) {
             this.data = [];
             fs.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
@@ -119,12 +119,12 @@ export default class Model {
                 value = parseInt(value);
             }
             if (value.like) {
-                if(!this.checkLikeClause(element[field], value.like)){
+                if (!this.checkLikeClause(element[field], value.like)) {
                     return false;
                 }
             }
             else if (value.in) {
-                if(!this.checkInClause(element[field], value.in)){
+                if (!this.checkInClause(element[field], value.in)) {
                     return false;
                 }
             }
@@ -143,7 +143,7 @@ export default class Model {
         return regex.test(field);
     }
 
-    checkInClause(field, array){
+    checkInClause(field, array) {
         if (!Array.isArray(array)) {
             throw new Error("In operator required an array value");
         }
@@ -168,10 +168,10 @@ export default class Model {
         return true;
     }
 
-    checkRequired(element){
+    checkRequired(element) {
         let required = Array.from(this.schema).filter(property => property.required && property.required === true);
-        for(let [property,options] of Object.entries(required)){
-            if(!element[property]){
+        for (let [property, options] of Object.entries(required)) {
+            if (!element[property]) {
                 throw new Error("Error : property " + property + " is required");
             }
         }
@@ -198,10 +198,10 @@ export default class Model {
         return true;
     }
 
-    addDefaultValue(element){
-        for(let [property,value] of Object.entries(this.schema)){
-            if(value.defaultValue && !element[property]){
-                element[property]=value.defaultValue;
+    addDefaultValue(element) {
+        for (let [property, value] of Object.entries(this.schema)) {
+            if (value.defaultValue && !element[property]) {
+                element[property] = value.defaultValue;
                 console.log(element[property]);
             }
         }
