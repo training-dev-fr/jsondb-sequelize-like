@@ -4,7 +4,7 @@
 Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
 ```
 
-Documentation availables in [docs](./docs) folder
+Documentation availables in [docs](https://training-dev-fr.github.io/jsondb-sequelize-like/) folder
 
 For compatibiliy check [Sequelize Compatibility file](./Sequelize_Compatibility.md)
 

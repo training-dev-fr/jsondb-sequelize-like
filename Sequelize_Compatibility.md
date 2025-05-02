@@ -5,6 +5,18 @@ This document provides an overview of which Sequelize-like features are currentl
 
 ---
 
+## 📖 Table of Contents
+
+- [🧩 Query Methods](#-query-methods)
+- [⚙️ Query Options](#-query-options)
+- [🔐 Validators](#-validators)
+- [⚒️ Operators (`Op.*`)](#️-operators-op)
+- [🧱 Schema Field Options](#-schema-field-options)
+- [🔗 Associations Compatibility](#-associations-compatibility)
+- [🧬 Data Types Compatibility](#-data-types-compatibility)
+
+---
+
 ## 🧩 Query Methods
 
 | Method         | Supported | Notes                           |
