@@ -32,19 +32,6 @@ const String = {
             type: "string"
         }
     },
-    /**
-     * Medium signed integer, can not have decimal values
-     * @min -8388608
-     * @max 8388607
-     */
-    MEDIUMINT: function(){
-        return {
-            type: "number",
-            special: "integer",
-            min: -8388608,
-            max: 8388607
-        }
-    },
 }
 
 export {String};
