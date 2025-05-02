@@ -1,4 +1,4 @@
-import { DataTypes } from "../src/index.js";
+import { DataTypes } from "../src/DataTypes/DataTypes.js";
 import { database } from "./connection.js";
 
 let User = database.define('user', {

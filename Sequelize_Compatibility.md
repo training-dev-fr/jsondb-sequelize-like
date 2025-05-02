@@ -170,22 +170,40 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 
 | Sequelize Type | Supported | Notes                                  | In Roadmap for v1 |
 |----------------|-----------|----------------------------------------|------------------|
-| `STRING`       | ✅        | Standard string                        | ❌        |
-| `TEXT`         | ❌        | Similar to string with no size limit   | ✅        |
-| `INTEGER`      | ❌        | Standard number                        | ✅        |
-| `BIGINT`       | ❌        | Not distinguished from `INTEGER`       | ✅        |
-| `FLOAT`        | ❌        | Float handling                         | ✅        |
-| `DOUBLE`       | ❌        | Not explicitly handled                 | ✅        |
-| `DECIMAL`      | ❌        | Same as float in practice              | ✅        |
-| `BOOLEAN`      | ❌        | True/false values                      | ✅        |
-| `DATE`         | ❌        | Handled via `Date.parse()`             | ✅        |
-| `DATEONLY`     | ❌        | No time part stripped                  | ✅        |
-| `UUID`         | ❌        | Validated via regex                    | ✅        |
-| `ENUM`         | ❌        | Not yet supported                      | ❌        |
-| `JSON`         | ❌        | No structure validation on object      | ✅        |
-| `BLOB`         | ❌        | Not applicable (no binary handling)    | ❌        |
-| `TIME`         | ❌        | Not handled separately                 | ✅        |
-| `NOW`          | ❌        | No auto-timestamp                      | ❌        |
+| `STRING`             | ✅        | Standard string                        | ❌        |
+| `TEXT`               | ✅        | Similar to string with no size limit   | ✅        |
+| `TINYINT`            | ✅        | tiny signed integer number             | ✅        |
+| `SMALLINT`           | ✅        | small signed integer number            | ✅        |
+| `MEDIUMINT`          | ✅        | medium signed integer number           | ✅        |
+| `INTEGER`            | ✅        | integer signed number                  | ✅        |
+| `BIGINT`             | ✅        | big integer signed number              | ✅        |
+| `TINYINT.UNSIGNED`   | ✅        | tiny integer number                    | ✅        |
+| `SMALLINT.UNSIGNED`  | ✅        | small integer number                   | ✅        |
+| `MEDIUMINT.UNSIGNED` | ✅        | medium integer number                  | ✅        |
+| `INTEGER.UNSIGNED`   | ✅        | integer number                         | ✅        |
+| `BIGINT.UNSIGNED`    | ✅        | big integer number                     | ✅        |
+| `FLOAT`              | ✅        | Float signed number (same as decimal)  | ✅        |
+| `DOUBLE`             | ✅        | Double signed number (same as decimal) | ✅        |
+| `DECIMAL`            | ✅        | Decimal signed number                  | ✅        |
+| `FLOAT.UNSIGNED`     | ✅        | Float number (same as decimal)         | ✅        |
+| `DOUBLE.UNSIGNED`    | ✅        | Double number (same as decimal)        | ✅        |
+| `DECIMAL.UNSIGNED`   | ✅        | Decimal number                         | ✅        |
+| `BOOLEAN`            | ✅        | True/false values                      | ✅        |
+| `DATE`               | ✅        | Date and Time                          | ✅        |
+| `DATEONLY`           | ✅        | Date                                   | ✅        |
+| `TIME`               | ✅        | Time                                   | ✅        |
+| `NOW`                | ✅        | generate new Date() on defaultValue    | ✅        |
+| `UUID`               | ❌        | Validated via regex                    | ✅        |
+| `ENUM`               | ❌        | Not yet supported                      | ❌        |
+| `JSON`               | ❌        | No structure validation on object      | ❌        |
+| `BLOB`               | ❌        | Not applicable (no binary handling)    | ❌        |
+
+
+Remarks, FLOAT, DOUBLE, DECIMAL with or without UNSIGNED must be call as a function :
+DataTypes.FLOAT() -- no precision
+DataTypes.FLOAT(10,2) -- with precision
+DataTypes.FLOAT.UNSIGNED() -- no precision
+DataTypes.FLOAT.UNSIGNED(10,2) -- with precision
 ---
 
 ## ❌ Not Supported / Out of Scope
