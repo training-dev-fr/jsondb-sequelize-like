@@ -3,6 +3,8 @@
 
 This document provides an overview of which Sequelize-like features are currently supported in `json-sequelize-like`, organized by category.
 
+If you are waiting for a functionnality in v1 Roadmap, check this file often,it is updated on every push
+
 ---
 
 ## 📖 Table of Contents
