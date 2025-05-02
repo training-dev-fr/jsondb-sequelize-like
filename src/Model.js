@@ -2,15 +2,19 @@ import fs from "fs";
 import DeepSave from "./DeepSave.js";
 import { validate } from "./Validator.js";
 
+/**
+ * Represent a model of data, with many method to manage data storage.
+ * This is build from jdb.define, based on a schema.
+ */
 export default class Model {
     /**
      * Model constructor, this class should not be instanciate directly, but called through jdb.define
      * @param {string} name the name of the data to store (table name)
-     * @param {Object[]} schema the validation schema with table properties and options
+     * @param {Object} schema the validation schema with table properties and options
      * @param {string} [namespace] the path to the folder where data should be stored (default /data)
      * @param {number} [deepSaveTiming] timing in milliseconds between two automatic deepSave (default 5 minutes)
      */
-    constructor(name, schema, {namespace, deepSaveTiming = 1000*60*5}) {
+    constructor(name, schema, { namespace, deepSaveTiming = 1000 * 60 * 5 }) {
         this.name = name;
         this.schema = schema;
         this.filename = name + ".json";
@@ -34,10 +38,15 @@ export default class Model {
     /**
      * Launch the deepSave function to store all history operation in json data file
      */
-    flush(){
-        this.deepSave.save(); 
+    flush() {
+        this.deepSave.save();
     }
 
+    /**
+     * Add operation in history for storage
+     * @param {string} operation type of crud operation to add in history
+     * @param {*} data data related to the operation
+     */
     save(operation, data) {
         try {
             fs.appendFileSync("./" + this.namespace + "/history/" + this.logname, operation + " " + JSON.stringify(data) + "\n");
@@ -46,6 +55,10 @@ export default class Model {
         }
     }
 
+    /**
+     * *** Should never be called manually ***
+     * Method to launch auto-save of history into json files
+     */
     deepSaveLauncher() {
         setTimeout(() => {
             this.deepSave.save();
@@ -53,8 +66,11 @@ export default class Model {
         }, this.deepSaveTiming);
     }
 
-    deep
-
+    /**
+     * Read query to get all element of a model.
+     * @param {Object} options various filtering options
+     * @returns All elements matching filtering conditions
+     */
     findAll(options) {
         if (!options.where && this.data.length > 0) {
             return this.data;
@@ -62,6 +78,11 @@ export default class Model {
         return this.data.filter(element => this.checkWhereClause(element, options));
     }
 
+    /**
+     * Read query to get the first element of a model.
+     * @param {Object} options various filtering options
+     * @returns First element matching filtering conditions
+     */
     findOne(options) {
         if (!options.where && this.data.length > 0) {
             return this.data[0];
@@ -69,6 +90,12 @@ export default class Model {
         return this.data.find(element => this.checkWhereClause(element, options));
     }
 
+    /**
+     * Create query to insert an element into the database
+     * @param {Object} element the element to store
+     * @returns the element after created
+     * @throws Error may be throw if the element does not pass all schema validation conditions
+     */
     create(element) {
         try {
             let errorStack = [];
@@ -77,8 +104,8 @@ export default class Model {
             errorStack = errorStack.concat(this.checkFormat(element));
             errorStack = errorStack.concat(this.checkRequired(element));
             errorStack = errorStack.concat(this.checkValidator(element));
-            if(errorStack.length > 0){
-                throw new Error("Validation failed",{cause: errorStack});
+            if (errorStack.length > 0) {
+                throw new Error("Validation failed", { cause: errorStack });
             }
         } catch (e) {
             throw e;
@@ -100,26 +127,41 @@ export default class Model {
         return newElement;
     }
 
+    /**
+     * Update query to update an element into the database
+     * @param {Object} element the element to update
+     * @param {Object} options various filtering options
+     * @returns the element after update
+     * @throws Error may be throw if the element does not pass all schema validation conditions
+     */
     updateOne(element, options) {
         let elementToUpdate = this.findOne(options);
         let copy = structuredClone(elementToUpdate);
+        Object.assign(elementToUpdate, element);
         try {
-            this.checkFieldExist(element);
-            this.checkFormat(element);
-            this.checkRequired(element);
-            this.checkValidator(element);
+            let errorStack = [];
+            errorStack = errorStack.concat(this.checkFieldExist(elementToUpdate));
+            errorStack = errorStack.concat(this.checkFormat(elementToUpdate));
+            errorStack = errorStack.concat(this.checkRequired(elementToUpdate));
+            errorStack = errorStack.concat(this.checkValidator(elementToUpdate));
         } catch (e) {
             throw e;
         }
-        Object.assign(elementToUpdate, element);
         try {
             this.save("update", elementToUpdate);
+            return elementToUpdate;
         } catch (e) {
             elementToUpdate = copy;
             throw new Error(e.message);
         }
     }
 
+    /**
+     * Delete query to remove one or many elements from the database
+     * @param {Object} options various filtering options
+     * @returns number of deleted elements
+     * @throws Error may be throw if the deletion failed
+     */
     destroy(options) {
         if (!options.where && this.data.length > 0) {
             return 0;
@@ -136,6 +178,13 @@ export default class Model {
         return count - this.data.length;
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Check all where query constraint on one element
+     * @param {Object} element the element to check
+     * @param {Object} options various filtering options
+     * @returns true if the element passed all conditions, either false
+     */
     checkWhereClause(element, options) {
         for (let [field, value] of Object.entries(options.where)) {
             if (value.like) {
@@ -155,6 +204,13 @@ export default class Model {
         return true;
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Transform like query to js regex, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {string} like the like constraint on query where options
+     * @returns true if the regex match the value, either false
+     */
     checkLikeClause(field, like) {
         if (typeof like !== "string") {
             throw new Error("Like operator required an string value");
@@ -163,6 +219,13 @@ export default class Model {
         return regex.test(field);
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Transform in query to js includes, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {string} array the list of accepted value
+     * @returns true if the value is in the array, either false
+     */
     checkInClause(field, array) {
         if (!Array.isArray(array)) {
             throw new Error("In operator required an array value");
@@ -170,6 +233,12 @@ export default class Model {
         return array.includes(field);
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Check element match schema validation before insert and update queries
+     * @param {Object} element the element to check
+     * @returns {Error[]} an array of error, if empty, the element passed all check
+     */
     checkFormat(element) {
         let errorStack = [];
         for (let [property, value] of Object.entries(element)) {
@@ -189,6 +258,12 @@ export default class Model {
         return errorStack;
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Check element match schema allowNull validation before insert and update queries
+     * @param {Object} element the element to check
+     * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
+     */
     checkRequired(element) {
         let errorStack = [];
         let required = Array.from(this.schema).filter(property => property.required && property.required === true);
@@ -200,6 +275,12 @@ export default class Model {
         return errorStack;
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Check element match schema properties, and no other ones before insert and update queries
+     * @param {Object} element the element to check
+     * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
+     */
     checkFieldExist(element) {
         let errorStack = [];
         for (let property of Object.keys(element)) {
@@ -210,6 +291,12 @@ export default class Model {
         return errorStack;
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * Check element match schema unique validation before insert and update queries
+     * @param {Object} element the element to check
+     * @returns {boolean} true if element is unique, either false
+     */
     checkUnique(property, value) {
         let obj = {};
         obj[property] = value;
@@ -222,6 +309,11 @@ export default class Model {
         return true;
     }
 
+    /**
+     * *** Internal method, should not be called externally ***
+     * add defaultValue on empty element before insert and update queries
+     * @param {Object} element the element to check for default values
+     */
     addDefaultValue(element) {
         for (let [property, value] of Object.entries(this.schema)) {
             if (value.defaultValue && !element[property]) {
@@ -231,11 +323,17 @@ export default class Model {
         }
     }
 
-    checkValidator(element){
+    /**
+     * *** Internal method, should not be called externally ***
+     * Check element match schema validators before insert and update queries
+     * @param {Object} element the element to check
+     * @returns {Error[]} an array of error, if empty, the element passed all validators check
+     */
+    checkValidator(element) {
         let errorStack = [];
         for (let [property, value] of Object.entries(this.schema)) {
             if (value.validate) {
-                errorStack = errorStack.concat(validate(element[property],property,value.validate));
+                errorStack = errorStack.concat(validate(element[property], property, value.validate));
             }
         }
         return errorStack;

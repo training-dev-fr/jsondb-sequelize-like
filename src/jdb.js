@@ -3,6 +3,7 @@ import fs from 'fs';
 
 class Jdb {
     /**
+     * constructor to manage model definition and storage
      * @param {number} [deepSaveTiming] timing in milliseconds between two automatic deepSave (default 5 minutes)
      * @param {string} [namespace] the path to the folder where data should be stored (default /data)
      */
