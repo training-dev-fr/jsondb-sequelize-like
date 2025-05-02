@@ -2,16 +2,17 @@ import Model from './Model.js';
 import fs from 'fs';
 
 /**
- * @class Model
+ * @class Jdb
  * @constructor
  */
 class Jdb {
-    /**
+    /*!*
      * constructor to manage model definition and storage
-     * @param {number} [deepSaveTiming=300000] timing in milliseconds between two automatic deepSave
-     * @param {string} [namespace=data] the path to the folder where data should be stored
+     * @param {Object} [options]
+     * @param {number} [options.deepSaveTiming=300000] timing in milliseconds between two automatic deepSave
+     * @param {string} [options.namespace=data] the path to the folder where data should be stored
      */
-    constructor({namespace="data", deepSaveTiming=1000*60*5}) {
+    constructor({namespace = "data", deepSaveTiming = 1000*60*5}) {
         this.namespace = namespace;
         this.deepSaveTiming = deepSaveTiming;
         if (!fs.existsSync('./' + this.namespace)) {
@@ -25,4 +26,4 @@ class Jdb {
 
 
 
-export default Jdb;
+export {Jdb};

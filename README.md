@@ -1,12 +1,8 @@
 # jsondb-sequelize-like – A lightweight JSON-based database with Sequelize-like syntax
 
-```
-Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
-```
+⚠️ Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
 
 Documentation availables in [docs](https://training-dev-fr.github.io/jsondb-sequelize-like/){:target="_blank"} folder
-
-For compatibiliy check [Sequelize Compatibility file](./Sequelize_Compatibility.md){:target="_blank"}
 
 **jsondb-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
 It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
@@ -24,6 +20,8 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 - 🎯 Auto-incrementing primary keys
 - ✅ Inspired by [Sequelize](https://sequelize.org){:target="_blank"} syntax
 - 🔒 No external dependencies
+
+Watch our [Sequelize Compatibility file](./Sequelize_Compatibility.md){:target="_blank"} for more information or compatibiliy check
 
 ---
 

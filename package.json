@@ -15,8 +15,8 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "esbuild src/index.js   --bundle --minify --outfile=dist/index.js --platform=node --format=cjs",
-    "pbuild" : "esbuild src/index.js   --bundle --minify --outfile=dist/index.js --platform=node --format=cjs && npm publish",
+    "build": "esbuild src/index.js   --bundle --outfile=dist/index.js --platform=node --format=cjs",
+    "pbuild" : "esbuild src/index.js   --bundle --outfile=dist/index.js --platform=node --format=cjs && npm publish",
     "doc": "jsdoc ./src -r -d docs"
   },
   "author": "",

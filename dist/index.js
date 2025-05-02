@@ -1,3 +1,724 @@
-var O=Object.create;var u=Object.defineProperty;var C=Object.getOwnPropertyDescriptor;var A=Object.getOwnPropertyNames;var D=Object.getPrototypeOf,F=Object.prototype.hasOwnProperty;var q=(e,t)=>{for(var s in t)u(e,s,{get:t[s],enumerable:!0})},w=(e,t,s,r)=>{if(t&&typeof t=="object"||typeof t=="function")for(let i of A(t))!F.call(e,i)&&i!==s&&u(e,i,{get:()=>t[i],enumerable:!(r=C(t,i))||r.enumerable});return e};var l=(e,t,s)=>(s=e!=null?O(D(e)):{},w(t||!e||!e.__esModule?u(s,"default",{value:e,enumerable:!0}):s,e)),U=e=>w(u({},"__esModule",{value:!0}),e);var he={};q(he,{DataTypes:()=>b,Operator:()=>S,default:()=>oe});module.exports=U(he);var L={STRING:function(e){let t={type:"string"};return e&&(t.max=e),t},NUMBER:function(){return{type:"number"}}},b=L;var c=l(require("fs"),1);var n=l(require("fs"),1),o=class{constructor(t,s,r,i){this.logname=t,this.filename=s,this.model=r,this.namespace=i,n.default.existsSync("./"+this.namespace+"/history/"+this.model+".old.txt")&&this.save(!1)}save(t=!0){try{t&&n.default.renameSync("./"+this.namespace+"/history/"+this.logname,"./"+this.namespace+"/history/"+this.model+".old.txt");let s=n.default.readFileSync("./"+this.namespace+"/history/"+this.model+".old.txt",{encoding:"utf8"}).split(`
-`);s=s.filter(r=>r!=""),this.data=JSON.parse(n.default.readFileSync("./"+this.namespace+"/"+this.filename,{encoding:"utf8"}));for(let r of s)this.addLine(r);n.default.writeFileSync("./"+this.namespace+"/"+this.filename,JSON.stringify(this.data)),n.default.writeFileSync("./"+this.namespace+"/history/"+this.logname,"",{flag:"a+"}),n.default.rmSync("./"+this.namespace+"/history/"+this.model+".old.txt")}catch(s){console.error(s)}}addLine(t){let[s,r]=t.split(" ");switch(r=JSON.parse(r),s){case"add":this.data.push(r);break;case"update":let i=this.data.find(a=>a.id===r.id);i=r;break;case"delete":this.data.filter(a=>a.id!==r.id);break}}};var h=e=>typeof e=="string",d=e=>typeof e=="number",j=(e,t)=>t.test(e),P=(e,t)=>!t.test(e),T=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e),V=e=>{try{return new URL(e),!0}catch{return!1}},J=e=>k(e)||v(e),k=e=>/^(\d{1,3}\.){3}\d{1,3}$/.test(e),v=e=>/^[\da-fA-F:]+$/.test(e),R=e=>/^[A-Za-z]+$/.test(e),$=e=>/^[A-Za-z0-9]+$/.test(e),M=e=>/^-?\d+(\.\d+)?$/.test(e),W=e=>Number.isInteger(e),E=e=>d(e)&&!Number.isInteger(e),B=e=>E(e),z=e=>h(e)&&e===e.toLowerCase(),Z=e=>h(e)&&e===e.toUpperCase(),G=e=>e!=null,H=e=>e==null,K=e=>e!==""&&e!==null&&e!==void 0,Q=(e,t)=>e===t,X=(e,t)=>h(e)&&e.includes(t),Y=(e,t)=>h(e)&&!e.includes(t),_=(e,t)=>Array.isArray(t)&&t.includes(e),N=(e,t)=>Array.isArray(t)&&!t.includes(e),ee=(e,t)=>h(e)&&e.length>=t[0]&&e.length<=t[1],te=e=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(e),re=e=>!isNaN(Date.parse(e)),se=(e,t)=>new Date(e)>new Date(t),ae=(e,t)=>new Date(e)<new Date(t),ie=(e,t)=>d(e)&&e>=t,ne=(e,t)=>d(e)&&e<=t,g=(e,t,s)=>{let r=[];for(let[i,a]of Object.entries(s))if(typeof a=="function")try{a(e)}catch(x){r.push(x)}else switch(i){case"is":j(e,a)||r.push(new Error(t+" must match pattern : "+a));break;case"not":P(e,a)||r.push(new Error(t+" must not match pattern : "+a));break;case"isUrl":V(e)||r.push(new Error(t+" must be url format"));break;case"isEmail":T(e)||r.push(new Error(t+" must be email format"));break;case"isIP":J(e)||r.push(new Error(t+" must be IPv4 or IPv6 format"));break;case"isIPv4":k(e)||r.push(new Error(t+" must be IPv4 format"));break;case"isIPv6":v(e)||r.push(new Error(t+" must be IPv6 format"));break;case"isAlpha":R(e)||r.push(new Error(t+" must contains only alpha chars"));break;case"isAlphanumeric":$(e)||r.push(new Error(t+" must contains only alpha and numeric chars"));break;case"isNumeric":M(e)||r.push(new Error(t+" must contains only numeric chars"));break;case"isInt":W(e)||r.push(new Error(t+" must be Integer"));break;case"isFloat":E(e)||r.push(new Error(t+" must be Decimal"));break;case"isDecimal":B(e)||r.push(new Error(t+" must be Float"));break;case"isLowerCase":z(e)||r.push(new Error(t+" must be in lowerCase"));break;case"isUpperCase":Z(e)||r.push(new Error(t+" must be in upperCase"));break;case"notNull":G(e)||r.push(new Error(t+" must be not null"));break;case"isNull":H(e)||r.push(new Error(t+" must be null"));break;case"notEmpty":K(e)||r.push(new Error(t+" must be not empty"));break;case"equals":Q(e,a)||r.push(new Error(t+" must be equals to "+a));break;case"contains":X(e,a)||r.push(new Error(t+" must contains "+a));break;case"notContains":Y(e,a)||r.push(new Error(t+" must not contains "+a));break;case"isIn":_(e,a)||r.push(new Error(t+" must be in "+JSON.stringify(a)));break;case"notIn":N(e,a)||r.push(new Error(t+" must not be in "+JSON.stringify(a)));break;case"len":ee(e,a)||r.push(new Error(t+" must be "+a+" chars length max"));break;case"isUUID":te(e)||r.push(new Error(t+" must be UUID"));break;case"isDate":re(e)||r.push(new Error(t+" must be a date"));break;case"isAfter":se(e,a)||r.push(new Error(t+" must be greater than "+a));break;case"isBefore":ae(e,a)||r.push(new Error(t+" must be lower than "+a));break;case"min":ie(e,a)||r.push(new Error(t+" must be greater than "+a));break;case"max":ne(e,a)||r.push(new Error(t+" must be lower than "+a));break;default:r.push(new Error("validator "+t+" is not implemented manage by jsondb tools"));break}return r};var f=class{constructor(t,s,{namespace:r,deepSaveTiming:i=1e3*60*5}){this.name=t,this.schema=s,this.filename=t+".json",this.logname=t+".txt",this.namespace=r,this.deepSaveTiming=i,this.deepSave=new o(this.logname,this.filename,this.name,this.namespace),c.default.existsSync("./"+this.namespace+"/"+this.filename)?this.data=JSON.parse(c.default.readFileSync("./"+this.namespace+"/"+this.filename,{flag:"a+"})):(this.data=[],c.default.writeFileSync("./"+this.namespace+"/"+this.filename,"[]",{flag:"a+"})),c.default.existsSync("./"+this.namespace+"/history/"+this.logname)||c.default.writeFileSync("./"+this.namespace+"/history/"+this.logname,"",{flag:"a+"}),this.deepSaveLauncher(),this.currentId=this.data.length>0?Math.max(...this.data.map(a=>a.id)):0}flush(){this.deepSave.save()}save(t,s){try{c.default.appendFileSync("./"+this.namespace+"/history/"+this.logname,t+" "+JSON.stringify(s)+`
-`)}catch(r){throw new Error(r.message)}}deepSaveLauncher(){setTimeout(()=>{this.deepSave.save(),this.deepSaveLauncher()},this.deepSaveTiming)}findAll(t){return!t.where&&this.data.length>0?this.data:this.data.filter(s=>this.checkWhereClause(s,t))}findOne(t){return!t.where&&this.data.length>0?this.data[0]:this.data.find(s=>this.checkWhereClause(s,t))}create(t){try{let r=[];if(this.addDefaultValue(t),r=r.concat(this.checkFieldExist(t)),r=r.concat(this.checkFormat(t)),r=r.concat(this.checkRequired(t)),r=r.concat(this.checkValidator(t)),r.length>0)throw new Error("Validation failed",{cause:r})}catch(r){throw r}let s={...t,id:this.currentId+1};this.data.push(s);try{this.save("add",s),this.currentId++}catch(r){throw this.data.pop(),new Error(r.message)}return s}updateOne(t,s){let r=this.findOne(s),i=structuredClone(r);Object.assign(r,t);try{let a=[];a=a.concat(this.checkFieldExist(r)),a=a.concat(this.checkFormat(r)),a=a.concat(this.checkRequired(r)),a=a.concat(this.checkValidator(r))}catch(a){throw a}try{return this.save("update",r),r}catch(a){throw r=i,new Error(a.message)}}destroy(t){if(!t.where&&this.data.length>0)return 0;let s=this.data.length,r=this.findOne(t);this.data=this.data.filter(i=>!checkWhereClause(i,t));try{this.save("delete",r)}catch(i){throw this.data.push(r),new Error(i.message)}return s-this.data.length}checkWhereClause(t,s){for(let[r,i]of Object.entries(s.where))if(i.like){if(!this.checkLikeClause(t[r],i.like))return!1}else if(i.in){if(!this.checkInClause(t[r],i.in))return!1}else if(t[r]!==i)return!1;return!0}checkLikeClause(t,s){if(typeof s!="string")throw new Error("Like operator required an string value");return new RegExp(s.replaceAll("%",".*")).test(t)}checkInClause(t,s){if(!Array.isArray(s))throw new Error("In operator required an array value");return s.includes(t)}checkFormat(t){let s=[];for(let[r,i]of Object.entries(t))typeof i!==this.schema[r].type.type&&s.push(new Error("Error : property "+r+" must be of type "+this.schema[r].type.type)),this.schema[r].type.max&&i.length>this.schema[r].type.max&&s.push(new Error("Error : property "+r+" must have "+this.schema[r].type.max+" at most")),this.schema[r].unique&&(this.checkUnique(r,i)||s.push(new Error("Error : property "+r+" must be unique")));return s}checkRequired(t){let s=[],r=Array.from(this.schema).filter(i=>i.required&&i.required===!0);for(let[i,a]of Object.entries(r))t[i]||s.push(new Error("Error : property "+i+" is required"));return s}checkFieldExist(t){let s=[];for(let r of Object.keys(t))this.schema[r]||s.push(new Error("Error : property "+r+" does not exist on "+this.name));return s}checkUnique(t,s){let r={};return r[t]=s,!this.findOne({where:r})}addDefaultValue(t){for(let[s,r]of Object.entries(this.schema))r.defaultValue&&!t[s]&&(t[s]=r.defaultValue,console.log(t[s]))}checkValidator(t){let s=[];for(let[r,i]of Object.entries(this.schema))i.validate&&(s=s.concat(g(t[r],r,i.validate)));return s}},y=f;var p=l(require("fs"),1),m=class{constructor({namespace:t="data",deepSaveTiming:s=1e3*60*5}){this.namespace=t,this.deepSaveTiming=s,p.default.existsSync("./"+this.namespace)||p.default.mkdirSync("./"+this.namespace+"/history",{recursive:!0})}define(t,s){return new y(t,s,this.namespace,this.deepSaveTiming)}},I=m;var ce={like:"like",in:"in"},S=ce;var oe=I;0&&(module.exports={DataTypes,Operator});
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/index.js
+var index_exports = {};
+__export(index_exports, {
+  DataTypes: () => DataTypes_default,
+  Jdb: () => jdb_default,
+  Operator: () => Operator_default
+});
+module.exports = __toCommonJS(index_exports);
+
+// src/DataTypes.js
+var DataTypes = {
+  STRING: function(value) {
+    let type = { type: "string" };
+    if (value) {
+      type.max = value;
+    }
+    return type;
+  },
+  NUMBER: function() {
+    return {
+      type: "number"
+    };
+  }
+};
+var DataTypes_default = DataTypes;
+
+// src/Model.js
+var import_fs2 = __toESM(require("fs"), 1);
+
+// src/DeepSave.js
+var import_fs = __toESM(require("fs"), 1);
+var DeepSave = class {
+  constructor(logname, filename, model, namespace) {
+    this.logname = logname;
+    this.filename = filename;
+    this.model = model;
+    this.namespace = namespace;
+    if (import_fs.default.existsSync("./" + this.namespace + "/history/" + this.model + ".old.txt")) {
+      this.save(false);
+    }
+  }
+  save(createOldHistory = true) {
+    try {
+      if (createOldHistory) {
+        import_fs.default.renameSync("./" + this.namespace + "/history/" + this.logname, "./" + this.namespace + "/history/" + this.model + ".old.txt");
+      }
+      let content = import_fs.default.readFileSync("./" + this.namespace + "/history/" + this.model + ".old.txt", { encoding: "utf8" }).split("\n");
+      content = content.filter((line) => line != "");
+      this.data = JSON.parse(import_fs.default.readFileSync("./" + this.namespace + "/" + this.filename, { encoding: "utf8" }));
+      for (let line of content) {
+        this.addLine(line);
+      }
+      import_fs.default.writeFileSync("./" + this.namespace + "/" + this.filename, JSON.stringify(this.data));
+      import_fs.default.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
+      import_fs.default.rmSync("./" + this.namespace + "/history/" + this.model + ".old.txt");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  addLine(line) {
+    let [operation, data] = line.split(" ");
+    data = JSON.parse(data);
+    switch (operation) {
+      case "add":
+        this.data.push(data);
+        break;
+      case "update":
+        let element = this.data.find((e) => e.id === data.id);
+        element = data;
+        break;
+      case "delete":
+        this.data.filter((element2) => element2.id !== data.id);
+        break;
+    }
+  }
+};
+
+// src/Validator.js
+var isString = (v) => typeof v === "string";
+var isNumber = (v) => typeof v === "number";
+var validateIs = (element, value) => {
+  return value.test(element);
+};
+var validateNot = (element, value) => {
+  return !value.test(element);
+};
+var validateIsEmail = (element) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(element);
+};
+var validateIsUrl = (element) => {
+  try {
+    new URL(element);
+    return true;
+  } catch {
+    return false;
+  }
+};
+var validateIsIP = (element) => {
+  return validateIsIPv4(element) || validateIsIPv6(element);
+};
+var validateIsIPv4 = (element) => {
+  return /^(\d{1,3}\.){3}\d{1,3}$/.test(element);
+};
+var validateIsIPv6 = (element) => {
+  return /^[\da-fA-F:]+$/.test(element);
+};
+var validateIsAlpha = (element) => {
+  return /^[A-Za-z]+$/.test(element);
+};
+var validateIsAlphanumeric = (element) => {
+  return /^[A-Za-z0-9]+$/.test(element);
+};
+var validateIsNumeric = (element) => {
+  return /^-?\d+(\.\d+)?$/.test(element);
+};
+var validateIsInt = (element) => {
+  return Number.isInteger(element);
+};
+var validateIsFloat = (element) => {
+  return isNumber(element) && !Number.isInteger(element);
+};
+var validateIsDecimal = (element) => {
+  return validateIsFloat(element);
+};
+var validateIsLowerCase = (element) => {
+  return isString(element) && element === element.toLowerCase();
+};
+var validateIsUpperCase = (element) => {
+  return isString(element) && element === element.toUpperCase();
+};
+var validateNotNull = (element) => {
+  return element !== null && element !== void 0;
+};
+var validateIsNull = (element) => {
+  return element === null || element === void 0;
+};
+var validateNotEmpty = (element) => {
+  return element !== "" && element !== null && element !== void 0;
+};
+var validateEquals = (element, value) => {
+  return element === value;
+};
+var validateContains = (element, value) => {
+  return isString(element) && element.includes(value);
+};
+var validateNotContains = (element, value) => {
+  return isString(element) && !element.includes(value);
+};
+var validateIsIn = (element, value) => {
+  return Array.isArray(value) && value.includes(element);
+};
+var validateNotIn = (element, value) => {
+  return Array.isArray(value) && !value.includes(element);
+};
+var validateLen = (element, value) => {
+  return isString(element) && element.length >= value[0] && element.length <= value[1];
+};
+var validateIsUUID = (element) => {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(element);
+};
+var validateIsDate = (element) => {
+  return !isNaN(Date.parse(element));
+};
+var validateIsAfter = (element, value) => {
+  return new Date(element) > new Date(value);
+};
+var validateIsBefore = (element, value) => {
+  return new Date(element) < new Date(value);
+};
+var validateMin = (element, value) => {
+  return isNumber(element) && element >= value;
+};
+var validateMax = (element, value) => {
+  return isNumber(element) && element <= value;
+};
+var validate = (element, propertyName, validator) => {
+  let errorStack = [];
+  for (let [property, value] of Object.entries(validator)) {
+    if (typeof value === "function") {
+      try {
+        value(element);
+      } catch (e) {
+        errorStack.push(e);
+      }
+    } else {
+      switch (property) {
+        case "is":
+          if (!validateIs(element, value)) {
+            errorStack.push(new Error(propertyName + " must match pattern : " + value));
+          }
+          break;
+        case "not":
+          if (!validateNot(element, value)) {
+            errorStack.push(new Error(propertyName + " must not match pattern : " + value));
+          }
+          break;
+        case "isUrl":
+          if (!validateIsUrl(element)) {
+            errorStack.push(new Error(propertyName + " must be url format"));
+          }
+          break;
+        case "isEmail":
+          if (!validateIsEmail(element)) {
+            errorStack.push(new Error(propertyName + " must be email format"));
+          }
+          break;
+        case "isIP":
+          if (!validateIsIP(element)) {
+            errorStack.push(new Error(propertyName + " must be IPv4 or IPv6 format"));
+          }
+          break;
+        case "isIPv4":
+          if (!validateIsIPv4(element)) {
+            errorStack.push(new Error(propertyName + " must be IPv4 format"));
+          }
+          break;
+        case "isIPv6":
+          if (!validateIsIPv6(element)) {
+            errorStack.push(new Error(propertyName + " must be IPv6 format"));
+          }
+          break;
+        case "isAlpha":
+          if (!validateIsAlpha(element)) {
+            errorStack.push(new Error(propertyName + " must contains only alpha chars"));
+          }
+          break;
+        case "isAlphanumeric":
+          if (!validateIsAlphanumeric(element)) {
+            errorStack.push(new Error(propertyName + " must contains only alpha and numeric chars"));
+          }
+          break;
+        case "isNumeric":
+          if (!validateIsNumeric(element)) {
+            errorStack.push(new Error(propertyName + " must contains only numeric chars"));
+          }
+          break;
+        case "isInt":
+          if (!validateIsInt(element)) {
+            errorStack.push(new Error(propertyName + " must be Integer"));
+          }
+          break;
+        case "isFloat":
+          if (!validateIsFloat(element)) {
+            errorStack.push(new Error(propertyName + " must be Decimal"));
+          }
+          break;
+        case "isDecimal":
+          if (!validateIsDecimal(element)) {
+            errorStack.push(new Error(propertyName + " must be Float"));
+          }
+          break;
+        case "isLowerCase":
+          if (!validateIsLowerCase(element)) {
+            errorStack.push(new Error(propertyName + " must be in lowerCase"));
+          }
+          break;
+        case "isUpperCase":
+          if (!validateIsUpperCase(element)) {
+            errorStack.push(new Error(propertyName + " must be in upperCase"));
+          }
+          break;
+        case "notNull":
+          if (!validateNotNull(element)) {
+            errorStack.push(new Error(propertyName + " must be not null"));
+          }
+          break;
+        case "isNull":
+          if (!validateIsNull(element)) {
+            errorStack.push(new Error(propertyName + " must be null"));
+          }
+          break;
+        case "notEmpty":
+          if (!validateNotEmpty(element)) {
+            errorStack.push(new Error(propertyName + " must be not empty"));
+          }
+          break;
+        case "equals":
+          if (!validateEquals(element, value)) {
+            errorStack.push(new Error(propertyName + " must be equals to " + value));
+          }
+          break;
+        case "contains":
+          if (!validateContains(element, value)) {
+            errorStack.push(new Error(propertyName + " must contains " + value));
+          }
+          break;
+        case "notContains":
+          if (!validateNotContains(element, value)) {
+            errorStack.push(new Error(propertyName + " must not contains " + value));
+          }
+          break;
+        case "isIn":
+          if (!validateIsIn(element, value)) {
+            errorStack.push(new Error(propertyName + " must be in " + JSON.stringify(value)));
+          }
+          break;
+        case "notIn":
+          if (!validateNotIn(element, value)) {
+            errorStack.push(new Error(propertyName + " must not be in " + JSON.stringify(value)));
+          }
+          break;
+        case "len":
+          if (!validateLen(element, value)) {
+            errorStack.push(new Error(propertyName + " must be " + value + " chars length max"));
+          }
+          break;
+        case "isUUID":
+          if (!validateIsUUID(element)) {
+            errorStack.push(new Error(propertyName + " must be UUID"));
+          }
+          break;
+        case "isDate":
+          if (!validateIsDate(element)) {
+            errorStack.push(new Error(propertyName + " must be a date"));
+          }
+          break;
+        case "isAfter":
+          if (!validateIsAfter(element, value)) {
+            errorStack.push(new Error(propertyName + " must be greater than " + value));
+          }
+          break;
+        case "isBefore":
+          if (!validateIsBefore(element, value)) {
+            errorStack.push(new Error(propertyName + " must be lower than " + value));
+          }
+          break;
+        case "min":
+          if (!validateMin(element, value)) {
+            errorStack.push(new Error(propertyName + " must be greater than " + value));
+          }
+          break;
+        case "max":
+          if (!validateMax(element, value)) {
+            errorStack.push(new Error(propertyName + " must be lower than " + value));
+          }
+          break;
+        default:
+          errorStack.push(new Error("validator " + propertyName + " is not implemented manage by jsondb tools"));
+          break;
+      }
+    }
+  }
+  return errorStack;
+};
+
+// src/Model.js
+var Model = class {
+  /**
+       * Model constructor, this class should not be instanciate directly, but called through jdb.define
+       * @param {string} name the name of the data to store (table name)
+       * @param {Object} schema the validation schema with table properties and options
+       * @param {string} [namespace] the path to the folder where data should be stored (default /data)
+       * @param {number} [deepSaveTiming] timing in milliseconds between two automatic deepSave (default 5 minutes)
+  
+       */
+  constructor(name, schema, { namespace, deepSaveTiming = 1e3 * 60 * 5 }) {
+    this.name = name;
+    this.schema = schema;
+    this.filename = name + ".json";
+    this.logname = name + ".txt";
+    this.namespace = namespace;
+    this.deepSaveTiming = deepSaveTiming;
+    this.deepSave = new DeepSave(this.logname, this.filename, this.name, this.namespace);
+    if (!import_fs2.default.existsSync("./" + this.namespace + "/" + this.filename)) {
+      this.data = [];
+      import_fs2.default.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
+    } else {
+      this.data = JSON.parse(import_fs2.default.readFileSync("./" + this.namespace + "/" + this.filename, { flag: "a+" }));
+    }
+    if (!import_fs2.default.existsSync("./" + this.namespace + "/history/" + this.logname)) {
+      import_fs2.default.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
+    }
+    this.deepSaveLauncher();
+    this.currentId = this.data.length > 0 ? Math.max(...this.data.map((u) => u.id)) : 0;
+  }
+  /**
+   * Launch the deepSave function to store all history operation in json data file
+   */
+  flush() {
+    this.deepSave.save();
+  }
+  /**
+   * Add operation in history for storage
+   * @param {string} operation type of crud operation to add in history
+   * @param {*} data data related to the operation
+   * @private
+   */
+  save(operation, data) {
+    try {
+      import_fs2.default.appendFileSync("./" + this.namespace + "/history/" + this.logname, operation + " " + JSON.stringify(data) + "\n");
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+  /**
+   * Method to launch auto-save of history into json files
+   * @private
+   */
+  deepSaveLauncher() {
+    setTimeout(() => {
+      this.deepSave.save();
+      this.deepSaveLauncher();
+    }, this.deepSaveTiming);
+  }
+  /**
+   * Read query to get all element of a model.
+   * @param {Object} options various filtering options
+   * @returns All elements matching filtering conditions
+   */
+  findAll(options) {
+    if (!options.where && this.data.length > 0) {
+      return this.data;
+    }
+    return this.data.filter((element) => this.checkWhereClause(element, options));
+  }
+  /**
+   * Read query to get the first element of a model.
+   * @param {Object} options various filtering options
+   * @returns First element matching filtering conditions
+   */
+  findOne(options) {
+    if (!options.where && this.data.length > 0) {
+      return this.data[0];
+    }
+    return this.data.find((element) => this.checkWhereClause(element, options));
+  }
+  /**
+   * Create query to insert an element into the database
+   * @param {Object} element the element to store
+   * @returns the element after created
+   * @throws Error may be throw if the element does not pass all schema validation conditions
+   */
+  create(element) {
+    try {
+      let errorStack = [];
+      this.addDefaultValue(element);
+      errorStack = errorStack.concat(this.checkFieldExist(element));
+      errorStack = errorStack.concat(this.checkFormat(element));
+      errorStack = errorStack.concat(this.checkRequired(element));
+      errorStack = errorStack.concat(this.checkValidator(element));
+      if (errorStack.length > 0) {
+        throw new Error("Validation failed", { cause: errorStack });
+      }
+    } catch (e) {
+      throw e;
+    }
+    const newElement = {
+      ...element,
+      id: this.currentId + 1
+    };
+    this.data.push(newElement);
+    try {
+      this.save("add", newElement);
+      this.currentId++;
+    } catch (e) {
+      this.data.pop();
+      throw new Error(e.message);
+    }
+    return newElement;
+  }
+  /**
+   * Update query to update an element into the database
+   * @param {Object} element the element to update
+   * @param {Object} options various filtering options
+   * @returns the element after update
+   * @throws Error may be throw if the element does not pass all schema validation conditions
+   */
+  updateOne(element, options) {
+    let elementToUpdate = this.findOne(options);
+    let copy = structuredClone(elementToUpdate);
+    Object.assign(elementToUpdate, element);
+    try {
+      let errorStack = [];
+      errorStack = errorStack.concat(this.checkFieldExist(elementToUpdate));
+      errorStack = errorStack.concat(this.checkFormat(elementToUpdate));
+      errorStack = errorStack.concat(this.checkRequired(elementToUpdate));
+      errorStack = errorStack.concat(this.checkValidator(elementToUpdate));
+    } catch (e) {
+      throw e;
+    }
+    try {
+      this.save("update", elementToUpdate);
+      return elementToUpdate;
+    } catch (e) {
+      elementToUpdate = copy;
+      throw new Error(e.message);
+    }
+  }
+  /**
+   * Delete query to remove one or many elements from the database
+   * @param {Object} options various filtering options
+   * @returns number of deleted elements
+   * @throws Error may be throw if the deletion failed
+   */
+  destroy(options) {
+    if (!options.where && this.data.length > 0) {
+      return 0;
+    }
+    let count = this.data.length;
+    const dataToDelete = this.findOne(options);
+    this.data = this.data.filter((user) => !checkWhereClause(user, options));
+    try {
+      this.save("delete", dataToDelete);
+    } catch (e) {
+      this.data.push(dataToDelete);
+      throw new Error(e.message);
+    }
+    return count - this.data.length;
+  }
+  /**
+   * Check all where query constraint on one element
+   * @param {Object} element the element to check
+   * @param {Object} options various filtering options
+   * @returns true if the element passed all conditions, either false
+   * @private
+   */
+  checkWhereClause(element, options) {
+    for (let [field, value] of Object.entries(options.where)) {
+      if (value.like) {
+        if (!this.checkLikeClause(element[field], value.like)) {
+          return false;
+        }
+      } else if (value.in) {
+        if (!this.checkInClause(element[field], value.in)) {
+          return false;
+        }
+      } else if (element[field] !== value) {
+        return false;
+      }
+    }
+    return true;
+  }
+  /**
+   * Transform like query to js regex, and check if the corresponding element field check the constraint
+   * @param {string} field the value to check on the element
+   * @param {string} like the like constraint on query where options
+   * @returns true if the regex match the value, either false
+   * @private
+   */
+  checkLikeClause(field, like) {
+    if (typeof like !== "string") {
+      throw new Error("Like operator required an string value");
+    }
+    let regex = new RegExp(like.replaceAll("%", ".*"));
+    return regex.test(field);
+  }
+  /**
+   * Transform in query to js includes, and check if the corresponding element field check the constraint
+   * @param {string} field the value to check on the element
+   * @param {string} array the list of accepted value
+   * @returns true if the value is in the array, either false
+   * @private
+   */
+  checkInClause(field, array) {
+    if (!Array.isArray(array)) {
+      throw new Error("In operator required an array value");
+    }
+    return array.includes(field);
+  }
+  /**
+   * Check element match schema validation before insert and update queries
+   * @param {Object} element the element to check
+   * @returns {Error[]} an array of error, if empty, the element passed all check
+   * @private
+   */
+  checkFormat(element) {
+    let errorStack = [];
+    for (let [property, value] of Object.entries(element)) {
+      if (typeof value !== this.schema[property].type.type) {
+        errorStack.push(new Error("Error : property " + property + " must be of type " + this.schema[property].type.type));
+      }
+      if (this.schema[property].type.max && value.length > this.schema[property].type.max) {
+        errorStack.push(new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most"));
+      }
+      if (this.schema[property].unique) {
+        let result = this.checkUnique(property, value);
+        if (!result) {
+          errorStack.push(new Error("Error : property " + property + " must be unique"));
+        }
+      }
+    }
+    return errorStack;
+  }
+  /**
+   * Check element match schema allowNull validation before insert and update queries
+   * @param {Object} element the element to check
+   * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
+   * @private
+   */
+  checkRequired(element) {
+    let errorStack = [];
+    let required = Array.from(this.schema).filter((property) => property.required && property.required === true);
+    for (let [property, options] of Object.entries(required)) {
+      if (!element[property]) {
+        errorStack.push(new Error("Error : property " + property + " is required"));
+      }
+    }
+    return errorStack;
+  }
+  /**
+   * Check element match schema properties, and no other ones before insert and update queries
+   * @param {Object} element the element to check
+   * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
+   * @private
+   */
+  checkFieldExist(element) {
+    let errorStack = [];
+    for (let property of Object.keys(element)) {
+      if (!this.schema[property]) {
+        errorStack.push(new Error("Error : property " + property + " does not exist on " + this.name));
+      }
+    }
+    return errorStack;
+  }
+  /**
+   * Check element match schema unique validation before insert and update queries
+   * @param {Object} element the element to check
+   * @returns {boolean} true if element is unique, either false
+   * @private
+   */
+  checkUnique(property, value) {
+    let obj = {};
+    obj[property] = value;
+    let element = this.findOne({
+      where: obj
+    });
+    if (element) {
+      return false;
+    }
+    return true;
+  }
+  /**
+   * add defaultValue on empty element before insert and update queries
+   * @param {Object} element the element to check for default values
+   * @private
+   */
+  addDefaultValue(element) {
+    for (let [property, value] of Object.entries(this.schema)) {
+      if (value.defaultValue && !element[property]) {
+        element[property] = value.defaultValue;
+        console.log(element[property]);
+      }
+    }
+  }
+  /**
+   * Check element match schema validators before insert and update queries
+   * @param {Object} element the element to check
+   * @returns {Error[]} an array of error, if empty, the element passed all validators check
+   * @private
+   */
+  checkValidator(element) {
+    let errorStack = [];
+    for (let [property, value] of Object.entries(this.schema)) {
+      if (value.validate) {
+        errorStack = errorStack.concat(validate(element[property], property, value.validate));
+      }
+    }
+    return errorStack;
+  }
+};
+var Model_default = Model;
+
+// src/jdb.js
+var import_fs3 = __toESM(require("fs"), 1);
+var Jdb = class {
+  /*!*
+   * constructor to manage model definition and storage
+   * @param {Object} [options]
+   * @param {number} [options.deepSaveTiming=300000] timing in milliseconds between two automatic deepSave
+   * @param {string} [options.namespace=data] the path to the folder where data should be stored
+   */
+  constructor({ namespace = "data", deepSaveTiming = 1e3 * 60 * 5 }) {
+    this.namespace = namespace;
+    this.deepSaveTiming = deepSaveTiming;
+    if (!import_fs3.default.existsSync("./" + this.namespace)) {
+      import_fs3.default.mkdirSync("./" + this.namespace + "/history", { recursive: true });
+    }
+  }
+  define(name, schema) {
+    return new Model_default(name, schema, this.namespace, this.deepSaveTiming);
+  }
+};
+var jdb_default = Jdb;
+
+// src/Operator.js
+var Operator = {
+  like: "like",
+  in: "in"
+};
+var Operator_default = Operator;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  DataTypes,
+  Jdb,
+  Operator
+});
