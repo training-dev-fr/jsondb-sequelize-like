@@ -1,11 +1,15 @@
 import Model from './Model.js';
 import fs from 'fs';
 
+/**
+ * @class Model
+ * @constructor
+ */
 class Jdb {
     /**
      * constructor to manage model definition and storage
-     * @param {number} [deepSaveTiming] timing in milliseconds between two automatic deepSave (default 5 minutes)
-     * @param {string} [namespace] the path to the folder where data should be stored (default /data)
+     * @param {number} [deepSaveTiming=300000] timing in milliseconds between two automatic deepSave
+     * @param {string} [namespace=data] the path to the folder where data should be stored
      */
     constructor({namespace="data", deepSaveTiming=1000*60*5}) {
         this.namespace = namespace;

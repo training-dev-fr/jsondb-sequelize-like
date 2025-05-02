@@ -1,6 +1,8 @@
 {
   "name": "jsondb-sequelize-like",
-  "version": "0.1.31",
+  "version": "0.1.33",
+  "repository":"https://github.com/training-dev-fr/jsondb-sequelize-like",
+  "man": "./doc",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -11,8 +13,8 @@
   ],
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild src/index.js   --bundle --minify --outfile=dist/index.js --platform=node --format=cjs"
+    "build": "esbuild src/index.js   --bundle --minify --outfile=dist/index.js --platform=node --format=cjs",
+    "doc": "jsdoc "
   },
   "author": "",
   "license": "license.md",

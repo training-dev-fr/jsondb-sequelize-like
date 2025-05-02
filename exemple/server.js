@@ -3,12 +3,12 @@ import User from './user.schema.js';
 
 try {
         User.create({
-            email: "aurelien.vaast@viacesi.fr",
+            email: "mark@yopmail.com",
             password: "123456789"
         });
     
         User.create({
-            email: "avaast3@myges.fr",
+            email: "jane@yopmail.com",
             password: "123456"
         });
     let result = User.findAll({ where: {password:{ [Op.in]: ["123456789","123456"] }} });
