@@ -2,7 +2,7 @@
 
 ⚠️ Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
 
-Documentation availables in <a href="https://training-dev-fr.github.io/jsondb-sequelize-like/">docs</a>[docs](https://training-dev-fr.github.io/jsondb-sequelize-like/){:target="_blank"} folder
+Documentation availables in <a href="https://training-dev-fr.github.io/jsondb-sequelize-like/" target="_blank">docs</a> folder
 
 **jsondb-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
 It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
@@ -18,10 +18,10 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 - 🔍 SQL-like querying: `where`, `like`, `is`, etc.
 - 🧱 Schema definition with `DataTypes`, `unique`, `validation`, etc.
 - 🎯 Auto-incrementing primary keys
-- ✅ Inspired by [Sequelize](https://sequelize.org){:target="_blank"} syntax
+- ✅ Inspired by <a href="https://sequelize.org" target="_blank">Sequelize</a> syntax
 - 🔒 No external dependencies
 
-Watch our [Sequelize Compatibility file](./Sequelize_Compatibility.md){:target="_blank"} for more information or compatibiliy check
+Watch our <a href="./Sequelize_Compatibility.md" target="_blank">Sequelize Compatibility file</a> for more information or compatibiliy check
 
 ---
 
@@ -143,4 +143,7 @@ Custom : see LICENSE.md
 
 ## 🙌 Author
 
-Aurélien Vaast – [GitHub](https://github.com/training-dev-fr/jsondb-sequelize-like){:target="_blank"} – [trainingdev.fr](https://training-dev.fr){:target="_blank"} - [npm](https://www.npmjs.com/package/jsondb-sequelize-like){:target="_blank"}
+Aurélien Vaast – 
+<a href="https://github.com/training-dev-fr/jsondb-sequelize-like" target="_blank">GitHub</a> -
+<a href="https://training-dev.fr" target="_blank">trainingdev.fr</a> -
+<a href="https://www.npmjs.com/package/jsondb-sequelize-like" target="_blank">npm</a> -
