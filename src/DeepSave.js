@@ -12,7 +12,7 @@ export default class DeepSave {
             fs.renameSync("./data/history/" + this.logname, "./data/history/" + this.model + ".old.txt");
             
             let content = fs.readFileSync("./data/history/" + this.model + ".old.txt", { encoding: 'utf8' }).split('\n');
-            content.pop();
+            content = content.filter(line => line != "");
             this.data = JSON.parse(fs.readFileSync("./data/" + this.filename, { encoding: 'utf8' }));
             for (let line of content) {
                 this.addLine(line);
