@@ -3,12 +3,13 @@ import DeepSave from "./DeepSave.js";
 import { validate } from "./Validator.js";
 
 export default class Model {
-    constructor(name, schema, namespace) {
+    constructor({name, schema, namespace, deepSaveTiming = 5000}) {
         this.name = name;
         this.schema = schema;
         this.filename = name + ".json";
         this.logname = name + ".txt";
         this.namespace = namespace;
+        this.deepSaveTiming = deepSaveTiming;
         this.deepSave = new DeepSave(this.logname, this.filename, this.name, this.namespace);
         if (!fs.existsSync("./" + this.namespace + "/" + this.filename)) {
             this.data = [];
@@ -23,6 +24,12 @@ export default class Model {
 
         this.currentId = this.data.length > 0 ? Math.max(...this.data.map(u => u.id)) : 0;
     }
+    /**
+     * Launch the deepSave function to store all history operation in json data file
+     */
+    flush(){
+        this.deepSave.save(); 
+    }
 
     save(operation, data) {
         try {
@@ -35,7 +42,8 @@ export default class Model {
     deepSaveLauncher() {
         setTimeout(() => {
             this.deepSave.save();
-        }, 5000);
+            this.deepSaveLauncher();
+        }, this.deepSaveTiming);
     }
 
     deep
