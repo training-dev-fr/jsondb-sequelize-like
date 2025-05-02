@@ -56,11 +56,12 @@ export default class Model {
 
     create(element) {
         try {
+            let errorStack = [];
             this.addDefaultValue(element);
-            this.checkFieldExist(element);
-            this.checkFormat(element);
+            errorStack = errorStack.concat(this.checkFieldExist(element));
+            errorStack = errorStack.concat(this.checkFormat(element));
             this.checkRequired(element);
-            let errorStack = this.checkValidator(element);
+            errorStack = errorStack.concat(this.checkValidator(element));
             if(errorStack.length > 0){
                 throw new Error("Validation failed",{cause: errorStack});
             }
@@ -122,9 +123,6 @@ export default class Model {
 
     checkWhereClause(element, options) {
         for (let [field, value] of Object.entries(options.where)) {
-            if (typeof element[field] === 'number') {
-                value = parseInt(value);
-            }
             if (value.like) {
                 if (!this.checkLikeClause(element[field], value.like)) {
                     return false;
@@ -158,39 +156,43 @@ export default class Model {
     }
 
     checkFormat(element) {
+        let errorStack = [];
         for (let [property, value] of Object.entries(element)) {
             if (typeof value !== this.schema[property].type.type) {
-                throw new Error("Error : property " + property + " must be of type " + this.schema[property].type.type);
+                errorStack.push(new Error("Error : property " + property + " must be of type " + this.schema[property].type.type));
             }
             if (this.schema[property].type.max && value.length > this.schema[property].type.max) {
-                throw new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most");
+                errorStack.push(new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most"));
             }
             if (this.schema[property].unique) {
                 let result = this.checkUnique(property, value);
                 if (!result) {
-                    throw new Error("Error : property " + property + " must be unique");
+                    errorStack.push(new Error("Error : property " + property + " must be unique"));
                 }
             }
         }
-        return true;
+        return errorStack;
     }
 
     checkRequired(element) {
+        let errorStack = [];
         let required = Array.from(this.schema).filter(property => property.required && property.required === true);
         for (let [property, options] of Object.entries(required)) {
             if (!element[property]) {
-                throw new Error("Error : property " + property + " is required");
+                errorStack.push(new Error("Error : property " + property + " is required"));
             }
         }
+        return errorStack;
     }
 
     checkFieldExist(element) {
+        let errorStack = [];
         for (let property of Object.keys(element)) {
             if (!this.schema[property]) {
-                throw new Error("Error : property " + property + " does not exist on " + this.name);
+                errorStack.push(new Error("Error : property " + property + " does not exist on " + this.name));
             }
         }
-        return true;
+        return errorStack;
     }
 
     checkUnique(property, value) {

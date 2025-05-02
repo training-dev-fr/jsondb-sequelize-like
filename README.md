@@ -18,7 +18,7 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 - 🧠 In-memory cache with periodic snapshot
 - ✍️ Append-only logging for safe writes
 - 🔍 SQL-like querying: `where`, `like`, `is`, etc.
-- 🧱 Schema definition with `DataTypes`, `unique`, and `validation`
+- 🧱 Schema definition with `DataTypes`, `unique`, `validation`, etc.
 - 🎯 Auto-incrementing primary keys
 - ✅ Inspired by [Sequelize](https://sequelize.org) syntax
 - 🔒 No external dependencies
@@ -115,9 +115,9 @@ The goal of `jsondb-sequelize-like` is to offer a zero-dependency, file-based DB
 ```
 project/
 ├── data/
-│   ├── user.json          ← snapshot (state)
-│   └── log/
-│       └── user.txt       ← append-only log
+│   ├── table.json          ← snapshot (state)
+│   └── history/
+│       └── history.txt       ← append-only log
 ```
 
 Snapshots are periodically written to disk and logs are replayed if needed.
