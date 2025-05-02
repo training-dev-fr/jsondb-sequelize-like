@@ -1,4 +1,4 @@
-# json-sequelize-like – A lightweight JSON-based database with Sequelize-like syntax
+# jsondb-sequelize-like – A lightweight JSON-based database with Sequelize-like syntax
 
 ```
 Note: This project is not affiliated with Sequelize. It’s simply inspired by its syntax and modeling philosophy to make transitions easier.
@@ -6,7 +6,7 @@ Note: This project is not affiliated with Sequelize. It’s simply inspired by i
 
 Api Documentation will come with v1
 
-**json-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
+**jsondb-sequelize-like** is a minimalist, file-based JSON database engine inspired by Sequelize.  
 It stores your data in flat `.json` files, supports typed schemas, append-only logs, validation, and a syntax similar to popular ORMs.  
 Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 
@@ -28,7 +28,7 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 ## 📦 Installation
 
 ```bash
-npm install json-sequelize-like
+npm install jsondb-sequelize-like
 ```
 
 ---
@@ -38,7 +38,7 @@ npm install json-sequelize-like
 ### 1. Define a model
 
 ```js
-import Jdb, { DataTypes } from 'json-sequelize-like';
+import Jdb, { DataTypes } from 'jsondb-sequelize-like';
 
 const db = new Jdb();
 
@@ -103,7 +103,7 @@ User.create({
 
 ## 💡 Philosophy
 
-The goal of `json-sequelize-like` is to offer a zero-dependency, file-based DB that mirrors the experience of Sequelize — so you can:
+The goal of `jsondb-sequelize-like` is to offer a zero-dependency, file-based DB that mirrors the experience of Sequelize — so you can:
 - prototype fast,
 - ship lightweight apps (embedded, CLI, offline tools),
 - and switch to Sequelize + Any SQL Database supported by sequelize later **without rewriting your models and queries at all**.
@@ -143,4 +143,4 @@ Custom : see LICENSE.md
 
 ## 🙌 Author
 
-Aurélien Vaast – [GitHub](https://github.com/training-dev-fr/json-sequelize-like) – [trainingdev.fr](https://training-dev.fr) - [npm](https://www.npmjs.com/package/jsondb-sequelize-like)
+Aurélien Vaast – [GitHub](https://github.com/training-dev-fr/jsondb-sequelize-like) – [trainingdev.fr](https://training-dev.fr) - [npm](https://www.npmjs.com/package/jsondb-sequelize-like)
