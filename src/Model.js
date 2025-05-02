@@ -3,7 +3,14 @@ import DeepSave from "./DeepSave.js";
 import { validate } from "./Validator.js";
 
 export default class Model {
-    constructor({name, schema, namespace, deepSaveTiming = 5000}) {
+    /**
+     * Model constructor, this class should not be instanciate directly, but called through jdb.define
+     * @param {string} name the name of the data to store (table name)
+     * @param {Object[]} schema the validation schema with table properties and options
+     * @param {string} [namespace] the path to the folder where data should be stored (default /data)
+     * @param {number} [deepSaveTiming] timing in milliseconds between two automatic deepSave (default 5 minutes)
+     */
+    constructor(name, schema, {namespace, deepSaveTiming = 1000*60*5}) {
         this.name = name;
         this.schema = schema;
         this.filename = name + ".json";
