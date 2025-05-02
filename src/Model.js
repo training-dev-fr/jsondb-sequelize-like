@@ -102,10 +102,42 @@ class Model {
      * @returns All elements matching filtering conditions
      */
     findAll(options) {
-        if (!options.where && this.data.length > 0) {
+        if(this.data.length===0){
             return this.data;
         }
-        return this.data.filter(element => this.checkWhereClause(element, options));
+        let result = this.data;
+        if (options.where) {
+            result = result.filter(element => this.checkWhereClause(element, options));
+        }
+        if(options.order){
+            result.sort((a,b) => {
+                for(let [property,order] of options.order){
+                    if(a[property] && !b[property]){
+                        return 1;
+                    }
+                    if(!a[property] && b[property]){
+                        return -1;
+                    }
+                    if(a[property] && b[property]){
+                        if(order === 'DESC'){
+                            if(a[property] !== b[property]){
+                                return a[property] < b[property]?1:-1;
+                            }
+                        }
+                        if(a[property] !== b[property]){
+                            return a[property] > b[property]?1:-1; 
+                        }
+                    }
+                }
+            })
+        }
+        if(options.offset){
+            result = result.slice(options.offset)
+        }
+        if(options.limit){
+            result = result.slice(0,options.limit);
+        }
+        return result;
     }
 
     /**

@@ -1,4 +1,3 @@
-import Op from '../src/Operator.js';
 import User from './user.schema.js';
 
 try {
@@ -9,9 +8,9 @@ try {
 
     User.create({
         email: "jane@yopmail.com",
-        password: "123456"
+        password: "1235456"
     });
-    let result = User.findAll({ where: { password: { [Op.in]: ["123456789", "123456"] } } });
+    let result = User.findAll({ order: [["password","DESC"],["email"]],offset:2,limit: 1});
     console.log(result);
 } catch (e) {
     console.error(e);

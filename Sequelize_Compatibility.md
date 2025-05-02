@@ -54,9 +54,9 @@ This document provides an overview of which Sequelize-like features are currentl
 | `distinct`     | ❌        | Apply SQL `DISTINCT` keyword                    | ❌        |
 | `group`        | ❌        | SQL `GROUP BY` clause                           |  ✅        |
 | `having`       | ❌        | SQL `HAVING` clause on grouped results          | ❌        |
-| `order`        | ❌        | Sort results (`[['name', 'DESC']]`)            |  ✅        |
-| `limit`        | ❌        | Max number of records                           |  ✅        |
-| `offset`       | ❌        | Number of records to skip (pagination)         |  ✅        |
+| `order`        | ✅        | Sort results (`[['name', 'DESC']]`)            |  ✅        |
+| `limit`        | ✅        | Max number of records                           |  ✅        |
+| `offset`       | ✅        | Number of records to skip (pagination)         |  ✅        |
 | `subQuery`     | ❌        | Force subquery usage                            | ❌        |
 | `benchmark`    | ❌        | Enable query execution time logging             | ❌        |
 | `logging`      | ❌        | Enable/disable logging                          | ❌        |

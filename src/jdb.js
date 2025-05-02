@@ -12,7 +12,7 @@ class Jdb {
      * @param {number} [options.deepSaveTiming=300000] timing in milliseconds between two automatic deepSave
      * @param {string} [options.namespace=data] the path to the folder where data should be stored
      */
-    constructor({namespace = "data", deepSaveTiming = 1000*60*5}) {
+    constructor({namespace, deepSaveTiming} = {namespace:"data",deepSaveTiming: 1000*60*5}) {
         this.namespace = namespace;
         this.deepSaveTiming = deepSaveTiming;
         if (!fs.existsSync('./' + this.namespace)) {
@@ -20,7 +20,7 @@ class Jdb {
         }
     }
     define(name, schema) {
-        return new Model(name, schema, this.namespace, this.deepSaveTiming);
+        return new Model(name, schema, {namespace: this.namespace,deepSaveTiming: this.deepSaveTiming});
     }
 }
 
