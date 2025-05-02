@@ -137,7 +137,7 @@ Snapshots are periodically written to disk and logs are replayed if needed.
 
 ## 📄 License
 
-Custom : see LICENSE.md
+Custom : see <a href="./LICENSE.md" target="_blank">LICENSE.md</a>
 
 ---
 
