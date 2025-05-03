@@ -21,26 +21,26 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 
 ## 🧩 Query Methods
 
-| Method         | Supported | Notes                             | In Roadmap for v1 |
-|----------------|-----------|-----------------------------------|-------------------|
-| `create`       | ✅        | Fully supported                  | ✅                |
-| `updateOne`    | ✅        | Update based on `.where` clause  | ✅                |
-| `destroy`      | ✅        | Removes item and logs operation  | ✅                |
-| `findAll`      | ✅        | Done via `.find()`               | ✅                |
-| `findOne`      | ✅        | Use `.find(...)[0]`              | ✅                |
-| `findById`     | ❌        | Not implemented                  | ✅                |
-| `updateById`   | ❌        | Not implemented                  | ✅                |
-| `destroyById`  | ❌        | Not implemented                  | ✅                |
-| `count`        | ❌        | Not implemented                  | ✅                |
-| `exists`       | ❌        | Not implemented                  | ❌                |
-| `bulkCreate`   | ❌        | Not implemented                  | ❌                |
-| `bulkUpdate`   | ❌        | Not implemented                  | ❌                |
-| `truncate`     | ❌        | Not implemented                  | ❌                |
-| `reload`       | ❌        | Not implemented                  | ❌                |
-| `flush`        | ❌        | Not implemented                  | ❌                |
-| `import`       | ❌        | Not implemented                  | ❌                |
-| `export`       | ❌        | Not implemented                  | ❌                |
-| `sync`         | ❌        | Not implemented                  | ❌                |
+| Method         | Supported | Notes                               | In Roadmap for v1 |
+|----------------|-----------|-------------------------------------|-------------------|
+| `create`       | ✅        | add item                           | ✅                |
+| `updateOne`    | ✅        | update one item                    | ✅                |
+| `destroy`      | ✅        | removes items                      | ✅                |
+| `findAll`      | ✅        | get all items matching conditions  | ✅                |
+| `findOne`      | ✅        | get first item matching conditions | ✅                |
+| `findById`     | ❌        | get item by is id                  | ✅                |
+| `updateById`   | ❌        | update item by is id               | ✅                |
+| `destroyById`  | ❌        | remove item by is id               | ✅                |
+| `count`        | ❌        | count items matching conditions    | ✅                |
+| `exists`       | ❌        | Not implemented                    | ❌                |
+| `bulkCreate`   | ❌        | Not implemented                    | ❌                |
+| `bulkUpdate`   | ❌        | Not implemented                    | ❌                |
+| `truncate`     | ❌        | Not implemented                    | ❌                |
+| `reload`       | ❌        | Not implemented                    | ❌                |
+| `flush`        | ❌        | Not implemented                    | ❌                |
+| `import`       | ❌        | Not implemented                    | ❌                |
+| `export`       | ❌        | Not implemented                    | ❌                |
+| `sync`         | ❌        | Not implemented                    | ❌                |
 
 ---
 
