@@ -27,6 +27,17 @@ class Model {
          * @private
          */
         this.schema = schema;
+        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)){
+            this.schema.createdAt = {
+                type: Date,
+            }
+        }
+        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)){
+            this.schema.updatedAt = {
+                type: Date,
+            }
+        }
+
         /**
          * @private
          */
@@ -234,8 +245,14 @@ class Model {
 
         const newElement = {
             ...element,
-            id: this.currentId + 1
+            id: this.currentId + 1,
         };
+        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)){
+            newElement.createdAt = Date.now();
+        }
+        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)){
+            elementToUpdate.updatedAt = Date.now();
+        }
         this.data.push(newElement);
         try {
             this.save("add", newElement);
@@ -269,6 +286,9 @@ class Model {
             throw e;
         }
         try {
+            if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)){
+                elementToUpdate.updatedAt = Date.now();
+            }
             this.save("update", elementToUpdate);
             return elementToUpdate;
         } catch (e) {
