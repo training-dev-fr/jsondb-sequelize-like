@@ -19,6 +19,22 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 
 ---
 
+
+## Legend: 
+### Suported :
+✅ Already implemented
+❌ Not implemented yet
+🔶 Partially implemented (can be used but not full function as sequelize)
+
+
+### In Roadmap for v1:
+✅ Will be implemented for v1 release
+❌ Will not be implemented for v1 release
+🔶 Will be partially implemented for v1 release
+❓  Might be implemented for v1 if i have enough time to
+
+---
+
 ## 🧩 Query Methods
 
 | Method         | Supported | Notes                               | In Roadmap for v1 |
@@ -29,15 +45,11 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | `findAll`      | ✅        | get all items matching conditions  | ✅                |
 | `findOne`      | ✅        | get first item matching conditions | ✅                |
 | `findByPk`     | ✅        | get item by is id                  | ✅                |
-| `count`        | ❌        | count items matching conditions    | ✅                |
-| `exists`       | ❌        | Not implemented                    | ❌                |
+| `count`        | ✅        | count items matching conditions    | ✅                |
+| `findOrCreate` | ✅        | Not implemented                    | ❌                |
 | `bulkCreate`   | ❌        | Not implemented                    | ❌                |
 | `bulkUpdate`   | ❌        | Not implemented                    | ❌                |
 | `truncate`     | ❌        | Not implemented                    | ❌                |
-| `reload`       | ❌        | Not implemented                    | ❌                |
-| `flush`        | ❌        | Not implemented                    | ❌                |
-| `import`       | ❌        | Not implemented                    | ❌                |
-| `export`       | ❌        | Not implemented                    | ❌                |
 | `sync`         | ❌        | Not implemented                    | ❌                |
 
 ---
@@ -47,12 +59,12 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | Option        | Supported   | Notes                                           | In Roadmap for v1           |
 |---------------|-------------|-------------------------------------------------|-----------------------------|
 | `where`        | ✅        | Condition filtering with key/value or operators  | ✅                         |
-| `attributes`   | ❌        | Field selection (ex: `['id', 'name']`)           | ✅                         |
+| `attributes`   | ✅        | Field selection (ex: `['id', 'name']`)           | ✅                         |
 | `include`      | ❌        | Join related models (`hasMany`, `belongsTo`)     | 🔶 1 nested-level support  |
 | `raw`          | ❌        | Return raw objects instead of instances          | ❌                         |
 | `paranoid`     | ❌        | Ignore soft-deleted rows (`deletedAt`)           | ❌                         |
 | `distinct`     | ❌        | Apply SQL `DISTINCT` keyword                     | ❌                         |
-| `group`        | ❌        | SQL `GROUP BY` clause                            | ✅                         |
+| `group`        | ❌        | SQL `GROUP BY` clause                            | ❌                         |
 | `having`       | ❌        | SQL `HAVING` clause on grouped results           | ❌                         |
 | `order`        | ✅        | Sort results (`[['name', 'DESC']]`)              | ✅                         |
 | `limit`        | ✅        | Max number of records                            | ✅                         |
@@ -111,8 +123,8 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 
 ## ⚒️ Operators (planned as `Op.*` syntax)
 
-| Operator        | Supported | Description                                  | In Roadmap for v1 |
-|-----------------|-----------|----------------------------------------------|-------------------|
+| Operator           | Supported | Description                                  | In Roadmap for v1 |
+|--------------------|-----------|----------------------------------------------|-------------------|
 | `Op.eq`            | ✅        | Equal to                                    | ✅                |
 | `Op.ne`            | ✅        | Not equal                                   | ✅                |
 | `Op.gte`           | ✅        | Greater than or equal                       | ✅                |
@@ -134,10 +146,10 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | `Op.notRegexP`     | ❌        | regex compare with not                      | ❌                |
 | `Op.iregexP`       | ❌        | regex compare case insensitive              | ❌                |
 | `Op.notIRegexP`    | ❌        | regex compare with not and case insensitive | ❌                |
-| `Op.startsWith`    | ❌        | check if string starts with                 | ✅                |
-| `Op.notStartsWith` | ❌        | check if string not starts with             | ✅                |
-| `Op.endsWith`      | ❌        | check if string ends with                   | ✅                |
-| `Op.notEndsWith`   | ❌        | check if string not ends with               | ✅                |
+| `Op.startsWith`    | ❌        | check if string starts with                 | ❓                 |
+| `Op.notStartsWith` | ❌        | check if string not starts with             | ❓                 |
+| `Op.endsWith`      | ❌        | check if string ends with                   | ❓                 |
+| `Op.notEndsWith`   | ❌        | check if string not ends with               | ❓                 |
 
 ---
 
