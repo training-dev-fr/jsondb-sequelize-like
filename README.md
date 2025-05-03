@@ -21,7 +21,9 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 - ✅ Inspired by <a href="https://sequelize.org" target="_blank">Sequelize</a> syntax
 - 🔒 No external dependencies
 
-Watch our <a href="./Sequelize_Compatibility.md" target="_blank">Sequelize Compatibility file</a> for more information or compatibiliy check
+Watch our <a href="./Sequelize_Compatibility.md" target="_blank">Sequelize Compatibility file</a> for more information or compatibiliy check.
+
+All syntax should be the same as sequelize v6, so you can refer to their [documentation](https://sequelize.org/docs/v6/) to use this package.
 
 ---
 
