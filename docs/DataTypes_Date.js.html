@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: DataTypes/Date.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,51 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: DataTypes/Date.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module DataTypes
+ */
+const Date = {
+    /**
+     * Date and time 
+     */
+    DATE: {
+        type: "date"
+    },
+    /**
+      * Date
+      */
+    DATEONLY: {
+        type: "date"
+    },
+    /**
+      * Time
+      */
+    TIME: {
+        type: "date"
+    },
+    /**
+     * Generate a new Date() for default value on insert and update queries
+     */
+    NOW: {
+        type: "Date.now",
+        get: () => {
+            return new Date()
+        }
+    }
+}
 
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export { Date };</code></pre>
+        </article>
+    </section>
 
 
 

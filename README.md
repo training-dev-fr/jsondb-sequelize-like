@@ -42,7 +42,7 @@ import Jdb, { DataTypes } from 'jsondb-sequelize-like';
 
 const db = new Jdb();
 
-const User = db.createModel('user', {
+const User = db.define('user', {
   email: {
     type: DataTypes.STRING(255),
     unique: true,
@@ -70,9 +70,9 @@ User.create({
 ### 3. Query data
 
 ```js
-const allUsers = User.find(); // returns all users
+const allUsers = User.findAll(); // returns all users
 
-const filtered = User.find({
+const filtered = User.findOne({
   where: {
     email: { like: '%@example.com' }
   }

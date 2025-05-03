@@ -31,7 +31,7 @@ var index_exports = {};
 __export(index_exports, {
   DataTypes: () => DataTypes,
   Jdb: () => Jdb,
-  Operator: () => Operator_default
+  Op: () => Operator_default
 });
 module.exports = __toCommonJS(index_exports);
 
@@ -357,11 +357,11 @@ var DeepSave = class {
         this.data.push(data);
         break;
       case "update":
-        let element = this.data.find((e) => e.id === data.id);
-        element = data;
+        let element2 = this.data.find((e) => e.id === data.id);
+        element2 = data;
         break;
       case "delete":
-        this.data.filter((element2) => element2.id !== data.id);
+        this.data.filter((element3) => element3.id !== data.id);
         break;
     }
   }
@@ -370,259 +370,259 @@ var DeepSave = class {
 // src/Validator.js
 var isString = (v) => typeof v === "string";
 var isNumber = (v) => typeof v === "number";
-var validateIs = (element, value) => {
-  return value.test(element);
+var validateIs = (element2, value) => {
+  return value.test(element2);
 };
-var validateNot = (element, value) => {
-  return !value.test(element);
+var validateNot = (element2, value) => {
+  return !value.test(element2);
 };
-var validateIsEmail = (element) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(element);
+var validateIsEmail = (element2) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(element2);
 };
-var validateIsUrl = (element) => {
+var validateIsUrl = (element2) => {
   try {
-    new URL(element);
+    new URL(element2);
     return true;
   } catch {
     return false;
   }
 };
-var validateIsIP = (element) => {
-  return validateIsIPv4(element) || validateIsIPv6(element);
+var validateIsIP = (element2) => {
+  return validateIsIPv4(element2) || validateIsIPv6(element2);
 };
-var validateIsIPv4 = (element) => {
-  return /^(\d{1,3}\.){3}\d{1,3}$/.test(element);
+var validateIsIPv4 = (element2) => {
+  return /^(\d{1,3}\.){3}\d{1,3}$/.test(element2);
 };
-var validateIsIPv6 = (element) => {
-  return /^[\da-fA-F:]+$/.test(element);
+var validateIsIPv6 = (element2) => {
+  return /^[\da-fA-F:]+$/.test(element2);
 };
-var validateIsAlpha = (element) => {
-  return /^[A-Za-z]+$/.test(element);
+var validateIsAlpha = (element2) => {
+  return /^[A-Za-z]+$/.test(element2);
 };
-var validateIsAlphanumeric = (element) => {
-  return /^[A-Za-z0-9]+$/.test(element);
+var validateIsAlphanumeric = (element2) => {
+  return /^[A-Za-z0-9]+$/.test(element2);
 };
-var validateIsNumeric = (element) => {
-  return /^-?\d+(\.\d+)?$/.test(element);
+var validateIsNumeric = (element2) => {
+  return /^-?\d+(\.\d+)?$/.test(element2);
 };
-var validateIsInt = (element) => {
-  return Number.isInteger(element);
+var validateIsInt = (element2) => {
+  return Number.isInteger(element2);
 };
-var validateIsFloat = (element) => {
-  return isNumber(element) && !Number.isInteger(element);
+var validateIsFloat = (element2) => {
+  return isNumber(element2) && !Number.isInteger(element2);
 };
-var validateIsDecimal = (element) => {
-  return validateIsFloat(element);
+var validateIsDecimal = (element2) => {
+  return validateIsFloat(element2);
 };
-var validateIsLowerCase = (element) => {
-  return isString(element) && element === element.toLowerCase();
+var validateIsLowerCase = (element2) => {
+  return isString(element2) && element2 === element2.toLowerCase();
 };
-var validateIsUpperCase = (element) => {
-  return isString(element) && element === element.toUpperCase();
+var validateIsUpperCase = (element2) => {
+  return isString(element2) && element2 === element2.toUpperCase();
 };
-var validateNotNull = (element) => {
-  return element !== null && element !== void 0;
+var validateNotNull = (element2) => {
+  return element2 !== null && element2 !== void 0;
 };
-var validateIsNull = (element) => {
-  return element === null || element === void 0;
+var validateIsNull = (element2) => {
+  return element2 === null || element2 === void 0;
 };
-var validateNotEmpty = (element) => {
-  return element !== "" && element !== null && element !== void 0;
+var validateNotEmpty = (element2) => {
+  return element2 !== "" && element2 !== null && element2 !== void 0;
 };
-var validateEquals = (element, value) => {
-  return element === value;
+var validateEquals = (element2, value) => {
+  return element2 === value;
 };
-var validateContains = (element, value) => {
-  return isString(element) && element.includes(value);
+var validateContains = (element2, value) => {
+  return isString(element2) && element2.includes(value);
 };
-var validateNotContains = (element, value) => {
-  return isString(element) && !element.includes(value);
+var validateNotContains = (element2, value) => {
+  return isString(element2) && !element2.includes(value);
 };
-var validateIsIn = (element, value) => {
-  return Array.isArray(value) && value.includes(element);
+var validateIsIn = (element2, value) => {
+  return Array.isArray(value) && value.includes(element2);
 };
-var validateNotIn = (element, value) => {
-  return Array.isArray(value) && !value.includes(element);
+var validateNotIn = (element2, value) => {
+  return Array.isArray(value) && !value.includes(element2);
 };
-var validateLen = (element, value) => {
-  return isString(element) && element.length >= value[0] && element.length <= value[1];
+var validateLen = (element2, value) => {
+  return isString(element2) && element2.length >= value[0] && element2.length <= value[1];
 };
-var validateIsUUID = (element) => {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(element);
+var validateIsUUID = (element2) => {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(element2);
 };
-var validateIsDate = (element) => {
-  return !isNaN(Date.parse(element));
+var validateIsDate = (element2) => {
+  return !isNaN(Date.parse(element2));
 };
-var validateIsAfter = (element, value) => {
-  return new Date(element) > new Date(value);
+var validateIsAfter = (element2, value) => {
+  return new Date(element2) > new Date(value);
 };
-var validateIsBefore = (element, value) => {
-  return new Date(element) < new Date(value);
+var validateIsBefore = (element2, value) => {
+  return new Date(element2) < new Date(value);
 };
-var validateMin = (element, value) => {
-  return isNumber(element) && element >= value;
+var validateMin = (element2, value) => {
+  return isNumber(element2) && element2 >= value;
 };
-var validateMax = (element, value) => {
-  return isNumber(element) && element <= value;
+var validateMax = (element2, value) => {
+  return isNumber(element2) && element2 <= value;
 };
-var validate = (element, propertyName, validator) => {
+var validate = (element2, propertyName, validator) => {
   let errorStack = [];
   for (let [property, value] of Object.entries(validator)) {
     if (typeof value === "function") {
       try {
-        value(element);
+        value(element2);
       } catch (e) {
         errorStack.push(e);
       }
     } else {
       switch (property) {
         case "is":
-          if (!validateIs(element, value)) {
+          if (!validateIs(element2, value)) {
             errorStack.push(new Error(propertyName + " must match pattern : " + value));
           }
           break;
         case "not":
-          if (!validateNot(element, value)) {
+          if (!validateNot(element2, value)) {
             errorStack.push(new Error(propertyName + " must not match pattern : " + value));
           }
           break;
         case "isUrl":
-          if (!validateIsUrl(element)) {
+          if (!validateIsUrl(element2)) {
             errorStack.push(new Error(propertyName + " must be url format"));
           }
           break;
         case "isEmail":
-          if (!validateIsEmail(element)) {
+          if (!validateIsEmail(element2)) {
             errorStack.push(new Error(propertyName + " must be email format"));
           }
           break;
         case "isIP":
-          if (!validateIsIP(element)) {
+          if (!validateIsIP(element2)) {
             errorStack.push(new Error(propertyName + " must be IPv4 or IPv6 format"));
           }
           break;
         case "isIPv4":
-          if (!validateIsIPv4(element)) {
+          if (!validateIsIPv4(element2)) {
             errorStack.push(new Error(propertyName + " must be IPv4 format"));
           }
           break;
         case "isIPv6":
-          if (!validateIsIPv6(element)) {
+          if (!validateIsIPv6(element2)) {
             errorStack.push(new Error(propertyName + " must be IPv6 format"));
           }
           break;
         case "isAlpha":
-          if (!validateIsAlpha(element)) {
+          if (!validateIsAlpha(element2)) {
             errorStack.push(new Error(propertyName + " must contains only alpha chars"));
           }
           break;
         case "isAlphanumeric":
-          if (!validateIsAlphanumeric(element)) {
+          if (!validateIsAlphanumeric(element2)) {
             errorStack.push(new Error(propertyName + " must contains only alpha and numeric chars"));
           }
           break;
         case "isNumeric":
-          if (!validateIsNumeric(element)) {
+          if (!validateIsNumeric(element2)) {
             errorStack.push(new Error(propertyName + " must contains only numeric chars"));
           }
           break;
         case "isInt":
-          if (!validateIsInt(element)) {
+          if (!validateIsInt(element2)) {
             errorStack.push(new Error(propertyName + " must be Integer"));
           }
           break;
         case "isFloat":
-          if (!validateIsFloat(element)) {
+          if (!validateIsFloat(element2)) {
             errorStack.push(new Error(propertyName + " must be Decimal"));
           }
           break;
         case "isDecimal":
-          if (!validateIsDecimal(element)) {
+          if (!validateIsDecimal(element2)) {
             errorStack.push(new Error(propertyName + " must be Float"));
           }
           break;
         case "isLowerCase":
-          if (!validateIsLowerCase(element)) {
+          if (!validateIsLowerCase(element2)) {
             errorStack.push(new Error(propertyName + " must be in lowerCase"));
           }
           break;
         case "isUpperCase":
-          if (!validateIsUpperCase(element)) {
+          if (!validateIsUpperCase(element2)) {
             errorStack.push(new Error(propertyName + " must be in upperCase"));
           }
           break;
         case "notNull":
-          if (!validateNotNull(element)) {
+          if (!validateNotNull(element2)) {
             errorStack.push(new Error(propertyName + " must be not null"));
           }
           break;
         case "isNull":
-          if (!validateIsNull(element)) {
+          if (!validateIsNull(element2)) {
             errorStack.push(new Error(propertyName + " must be null"));
           }
           break;
         case "notEmpty":
-          if (!validateNotEmpty(element)) {
+          if (!validateNotEmpty(element2)) {
             errorStack.push(new Error(propertyName + " must be not empty"));
           }
           break;
         case "equals":
-          if (!validateEquals(element, value)) {
+          if (!validateEquals(element2, value)) {
             errorStack.push(new Error(propertyName + " must be equals to " + value));
           }
           break;
         case "contains":
-          if (!validateContains(element, value)) {
+          if (!validateContains(element2, value)) {
             errorStack.push(new Error(propertyName + " must contains " + value));
           }
           break;
         case "notContains":
-          if (!validateNotContains(element, value)) {
+          if (!validateNotContains(element2, value)) {
             errorStack.push(new Error(propertyName + " must not contains " + value));
           }
           break;
         case "isIn":
-          if (!validateIsIn(element, value)) {
+          if (!validateIsIn(element2, value)) {
             errorStack.push(new Error(propertyName + " must be in " + JSON.stringify(value)));
           }
           break;
         case "notIn":
-          if (!validateNotIn(element, value)) {
+          if (!validateNotIn(element2, value)) {
             errorStack.push(new Error(propertyName + " must not be in " + JSON.stringify(value)));
           }
           break;
         case "len":
-          if (!validateLen(element, value)) {
+          if (!validateLen(element2, value)) {
             errorStack.push(new Error(propertyName + " must be " + value + " chars length max"));
           }
           break;
         case "isUUID":
-          if (!validateIsUUID(element)) {
+          if (!validateIsUUID(element2)) {
             errorStack.push(new Error(propertyName + " must be UUID"));
           }
           break;
         case "isDate":
-          if (!validateIsDate(element)) {
+          if (!validateIsDate(element2)) {
             errorStack.push(new Error(propertyName + " must be a date"));
           }
           break;
         case "isAfter":
-          if (!validateIsAfter(element, value)) {
+          if (!validateIsAfter(element2, value)) {
             errorStack.push(new Error(propertyName + " must be greater than " + value));
           }
           break;
         case "isBefore":
-          if (!validateIsBefore(element, value)) {
+          if (!validateIsBefore(element2, value)) {
             errorStack.push(new Error(propertyName + " must be lower than " + value));
           }
           break;
         case "min":
-          if (!validateMin(element, value)) {
+          if (!validateMin(element2, value)) {
             errorStack.push(new Error(propertyName + " must be greater than " + value));
           }
           break;
         case "max":
-          if (!validateMax(element, value)) {
+          if (!validateMax(element2, value)) {
             errorStack.push(new Error(propertyName + " must be lower than " + value));
           }
           break;
@@ -634,6 +634,25 @@ var validate = (element, propertyName, validator) => {
   }
   return errorStack;
 };
+
+// src/Operator.js
+var Operator = {
+  like: "like",
+  in: "in",
+  eq: "eq",
+  ne: "ne",
+  gte: "gte",
+  gt: "gt",
+  lte: "lte",
+  lt: "lt",
+  not: "not",
+  notIn: "notIn",
+  notLike: "notLike",
+  between: "between",
+  notBetween: "notBetween",
+  is: "is"
+};
+var Operator_default = Operator;
 
 // src/Model.js
 var Model = class {
@@ -705,7 +724,7 @@ var Model = class {
     }
     let result = this.data;
     if (options.where) {
-      result = result.filter((element) => this.checkWhereClause(element, options));
+      result = result.filter((element2) => this.checkWhereClause(element2, options));
     }
     if (options.order) {
       result.sort((a, b) => {
@@ -746,7 +765,7 @@ var Model = class {
     if (!options.where && this.data.length > 0) {
       return this.data[0];
     }
-    return this.data.find((element) => this.checkWhereClause(element, options));
+    return this.data.find((element2) => this.checkWhereClause(element2, options));
   }
   /**
    * Create query to insert an element into the database
@@ -754,14 +773,14 @@ var Model = class {
    * @returns the element after created
    * @throws Error may be throw if the element does not pass all schema validation conditions
    */
-  create(element) {
+  create(element2) {
     try {
       let errorStack = [];
-      this.addDefaultValue(element);
-      errorStack = errorStack.concat(this.checkFieldExist(element));
-      errorStack = errorStack.concat(this.checkFormat(element));
-      errorStack = errorStack.concat(this.checkRequired(element));
-      errorStack = errorStack.concat(this.checkValidator(element));
+      this.addDefaultValue(element2);
+      errorStack = errorStack.concat(this.checkFieldExist(element2));
+      errorStack = errorStack.concat(this.checkFormat(element2));
+      errorStack = errorStack.concat(this.checkRequired(element2));
+      errorStack = errorStack.concat(this.checkValidator(element2));
       if (errorStack.length > 0) {
         throw new Error("Validation failed", { cause: errorStack });
       }
@@ -769,7 +788,7 @@ var Model = class {
       throw e;
     }
     const newElement = {
-      ...element,
+      ...element2,
       id: this.currentId + 1
     };
     this.data.push(newElement);
@@ -789,10 +808,10 @@ var Model = class {
    * @returns the element after update
    * @throws Error may be throw if the element does not pass all schema validation conditions
    */
-  updateOne(element, options) {
+  updateOne(element2, options) {
     let elementToUpdate = this.findOne(options);
     let copy = structuredClone(elementToUpdate);
-    Object.assign(elementToUpdate, element);
+    Object.assign(elementToUpdate, element2);
     try {
       let errorStack = [];
       errorStack = errorStack.concat(this.checkFieldExist(elementToUpdate));
@@ -838,48 +857,17 @@ var Model = class {
    * @returns true if the element passed all conditions, either false
    * @private
    */
-  checkWhereClause(element, options) {
-    for (let [field, value] of Object.entries(options.where)) {
-      if (value.like) {
-        if (!this.checkLikeClause(element[field], value.like)) {
+  checkWhereClause(element2, options) {
+    for (let [field2, value] of Object.entries(options.where)) {
+      if (typeof value === "object") {
+        if (!checkOperator({ type: Object.keys(value)[0], value }, element2[field2])) {
           return false;
         }
-      } else if (value.in) {
-        if (!this.checkInClause(element[field], value.in)) {
-          return false;
-        }
-      } else if (element[field] !== value) {
+      } else if (element2[field2] !== value) {
         return false;
       }
     }
     return true;
-  }
-  /**
-   * Transform like query to js regex, and check if the corresponding element field check the constraint
-   * @param {string} field the value to check on the element
-   * @param {string} like the like constraint on query where options
-   * @returns true if the regex match the value, either false
-   * @private
-   */
-  checkLikeClause(field, like) {
-    if (typeof like !== "string") {
-      throw new Error("Like operator required an string value");
-    }
-    let regex = new RegExp(like.replaceAll("%", ".*"));
-    return regex.test(field);
-  }
-  /**
-   * Transform in query to js includes, and check if the corresponding element field check the constraint
-   * @param {string} field the value to check on the element
-   * @param {string} array the list of accepted value
-   * @returns true if the value is in the array, either false
-   * @private
-   */
-  checkInClause(field, array) {
-    if (!Array.isArray(array)) {
-      throw new Error("In operator required an array value");
-    }
-    return array.includes(field);
   }
   /**
    * Check element match schema validation before insert and update queries
@@ -887,14 +875,14 @@ var Model = class {
    * @returns {Error[]} an array of error, if empty, the element passed all check
    * @private
    */
-  checkFormat(element) {
+  checkFormat(element2) {
     let errorStack = [];
-    for (let [property, value] of Object.entries(element)) {
+    for (let [property, value] of Object.entries(element2)) {
       if (typeof value !== this.schema[property].type.type) {
         errorStack.push(new Error("Error : property " + property + " must be of type " + this.schema[property].type.type));
       }
-      if (this.schema[property].type.max && value.length > this.schema[property].type.max) {
-        errorStack.push(new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most"));
+      if (this.schema[property].type.min || this.schema[property].type.max) {
+        errorStack = errorStack.concat(this.checkType(property, value));
       }
       if (this.schema[property].unique) {
         let result = this.checkUnique(property, value);
@@ -905,17 +893,59 @@ var Model = class {
     }
     return errorStack;
   }
+  checkType(property, value) {
+    let errorStack = [];
+    switch (this.schema[property].type) {
+      case "string":
+        if (this.schema[property].type.max && value.length > this.schema[property].type.max) {
+          errorStack.push(new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most"));
+        }
+        break;
+      case "number":
+        if (this.schema[property].type.max && value > this.schema[property].type.max) {
+          errorStack.push(new Error("Error : property " + property + " can not be greater than " + this.schema[property].type.max));
+        }
+        if (this.schema[property].type.min && value < this.schema[property].type.min) {
+          errorStack.push(new Error("Error : property " + property + " can not be lower than " + this.schema[property].type.max));
+        }
+        if (this.schema[property].special && this.schema[property].special === "integer") {
+          if (!Number.isInteger(value)) {
+            errorStack.push(new Error("Error : property " + property + " must be an integer value"));
+          }
+        }
+        if (this.schema[property].special && ["float", "double", "decimal"].includes(this.schema[property].special)) {
+          if (Number(value) !== value) {
+            errorStack.push(new Error("Error : property " + property + " must be an number value"));
+          }
+          if (this.schema[property].precision) {
+            if (value.toString().replace(".", "").replace("-", "").length > this.schema[property].precision) {
+              errorStack.push(new Error("Error : property " + property + " can not exceed " + this.schema[property].precision + " digits"));
+            }
+          }
+          if (this.schema[property].scale) {
+            let splitNumber = value.split(".");
+            if (splitNumber.length > 1) {
+              if (splitNumber[2].toString().length > this.schema[property].scale) {
+                errorStack.push(new Error("Error : property " + property + " can not have more than " + this.schema[property].scale + " decimals digits"));
+              }
+            }
+          }
+        }
+        break;
+    }
+    return errorStack;
+  }
   /**
    * Check element match schema allowNull validation before insert and update queries
    * @param {Object} element the element to check
    * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
    * @private
    */
-  checkRequired(element) {
+  checkRequired(element2) {
     let errorStack = [];
     let required = Array.from(this.schema).filter((property) => property.required && property.required === true);
     for (let [property, options] of Object.entries(required)) {
-      if (!element[property]) {
+      if (!element2[property]) {
         errorStack.push(new Error("Error : property " + property + " is required"));
       }
     }
@@ -927,9 +957,9 @@ var Model = class {
    * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
    * @private
    */
-  checkFieldExist(element) {
+  checkFieldExist(element2) {
     let errorStack = [];
-    for (let property of Object.keys(element)) {
+    for (let property of Object.keys(element2)) {
       if (!this.schema[property]) {
         errorStack.push(new Error("Error : property " + property + " does not exist on " + this.name));
       }
@@ -945,10 +975,10 @@ var Model = class {
   checkUnique(property, value) {
     let obj = {};
     obj[property] = value;
-    let element = this.findOne({
+    let element2 = this.findOne({
       where: obj
     });
-    if (element) {
+    if (element2) {
       return false;
     }
     return true;
@@ -958,11 +988,11 @@ var Model = class {
    * @param {Object} element the element to check for default values
    * @private
    */
-  addDefaultValue(element) {
+  addDefaultValue(element2) {
     for (let [property, value] of Object.entries(this.schema)) {
-      if (value.defaultValue && !element[property]) {
-        element[property] = value.defaultValue;
-        console.log(element[property]);
+      if (value.defaultValue && !element2[property]) {
+        element2[property] = value.defaultValue;
+        console.log(element2[property]);
       }
     }
   }
@@ -972,14 +1002,99 @@ var Model = class {
    * @returns {Error[]} an array of error, if empty, the element passed all validators check
    * @private
    */
-  checkValidator(element) {
+  checkValidator(element2) {
     let errorStack = [];
     for (let [property, value] of Object.entries(this.schema)) {
       if (value.validate) {
-        errorStack = errorStack.concat(validate(element[property], property, value.validate));
+        errorStack = errorStack.concat(validate(element2[property], property, value.validate));
       }
     }
     return errorStack;
+  }
+  checkOperator(operator, value) {
+    switch (operator.type) {
+      case "like":
+        if (!this.checkLikeClause(element[field], operator.value)) {
+          return false;
+        }
+        break;
+      case "in":
+        if (!this.checkInClause(element[field], operator.value)) {
+          return false;
+        }
+        break;
+      case "eq":
+        if (!this.checkEqClause(element[field], operator.value)) {
+          return false;
+        }
+        break;
+      case "ne":
+        break;
+      case "gte":
+        break;
+      case "gt":
+        break;
+      case "lte":
+        break;
+      case "lt":
+        break;
+      case "not":
+        break;
+      case "notIn":
+        if (this.checkInClause(element[field], value.in)) {
+          return false;
+        }
+        break;
+      case "notLike":
+        if (this.checkLikeClause(element[field], operator.value)) {
+          return false;
+        }
+        break;
+      case "between":
+        break;
+      case "notBetween":
+        break;
+    }
+  }
+  /**
+   * Transform like query to js regex, and check if the corresponding element field check the constraint
+   * @param {string} field the value to check on the element
+   * @param {string} like the like constraint on query where options
+   * @returns true if the regex match the value, either false
+   * @private
+   */
+  checkLikeClause(field2, like) {
+    if (typeof like !== "string") {
+      throw new Error("Like operator required an string value");
+    }
+    let regex = new RegExp(like.replaceAll("%", ".*"));
+    return regex.test(field2);
+  }
+  /**
+   * Transform in query to js includes, and check if the corresponding element field check the constraint
+   * @param {string} field the value to check on the element
+   * @param {string} array the list of accepted value
+   * @returns true if the value is in the array, either false
+   * @private
+   */
+  checkInClause(field2, array) {
+    if (!Array.isArray(array)) {
+      throw new Error("In operator required an array value");
+    }
+    return array.includes(field2);
+  }
+  /**
+   * Transform in query to js includes, and check if the corresponding element field check the constraint
+   * @param {string} field the value to check on the element
+   * @param {string} array the list of accepted value
+   * @returns true if the value is in the array, either false
+   * @private
+   */
+  checkInClause(field2, array) {
+    if (!Array.isArray(array)) {
+      throw new Error("In operator required an array value");
+    }
+    return array.includes(field2);
   }
 };
 var Model_default = Model;
@@ -1004,16 +1119,9 @@ var Jdb = class {
     return new Model_default(name, schema, { namespace: this.namespace, deepSaveTiming: this.deepSaveTiming });
   }
 };
-
-// src/Operator.js
-var Operator = {
-  like: "like",
-  in: "in"
-};
-var Operator_default = Operator;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   DataTypes,
   Jdb,
-  Operator
+  Op
 });

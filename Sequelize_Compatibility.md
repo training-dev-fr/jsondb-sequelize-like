@@ -1,7 +1,7 @@
 
-# Sequelize Compatibility – json-sequelize-like
+# Sequelize Compatibility – jsondb-sequelize-like
 
-This document provides an overview of which Sequelize-like features are currently supported in `json-sequelize-like`, organized by category.
+This document provides an overview of which Sequelize-like features are currently supported in `jsondb-sequelize-like`, organized by category.
 
 If you are waiting for a functionnality in v1 Roadmap, check this file often,it is updated on every push
 
@@ -99,13 +99,13 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | `isBefore`        | ✅        | Date < comparison                                | ✅               |
 | `min`             | ✅        | Number >= min                                    | ✅               |
 | `max`             | ✅        | Number <= max                                    | ✅               |
-| `isCreditCard`    | ❌        | Must be a valid credit card number               | ✅               |
-| `isJson`          | ❌        | Must be a valid JSON string                      | ✅               |
-| `isMobilePhone`   | ❌        | Must be a valid mobile number                    | ✅               |
-| `isAscii`         | ❌        | Must contain ASCII characters only               | ✅               |
-| `isBase64`        | ❌        | Must be a valid Base64 string                    | ✅               |
-| `isPostalCode`    | ❌        | Must be a valid postal code (with locale)        | ✅               |
-| `isSlug`          | ❌        | Must be a URL-friendly slug (e.g. `my-title`)    | ✅               |
+| `isCreditCard`    | ❌        | Must be a valid credit card number               | ❌               |
+| `isJson`          | ❌        | Must be a valid JSON string                      | ❌               |
+| `isMobilePhone`   | ❌        | Must be a valid mobile number                    | ❌               |
+| `isAscii`         | ❌        | Must contain ASCII characters only               | ❌               |
+| `isBase64`        | ❌        | Must be a valid Base64 string                    | ❌               |
+| `isPostalCode`    | ❌        | Must be a valid postal code (with locale)        | ❌               |
+| `isSlug`          | ❌        | Must be a URL-friendly slug (e.g. `my-title`)    | ❌               |
 | `isMimeType`      | ❌        | Must be a valid MIME type                        | ❌               |
 | `isISBN`          | ❌        | Must be a valid ISBN-10 or ISBN-13               | ❌               |
        
@@ -113,25 +113,29 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 
 ## ⚒️ Operators (planned as `Op.*` syntax)
 
-| Operator     | Supported | Description                                  | In Roadmap for v1 |
-|--------------|-----------|----------------------------------------------|-------------------|
-| `Op.eq`      | ❌        | Equal to                                    | ✅                |
-| `Op.ne`      | ❌        | Not equal                                   | ✅                |
-| `Op.gte`     | ❌        | Greater than or equal                       | ✅                |
-| `Op.gt`      | ❌        | Greater than                                | ✅                |
-| `Op.lte`     | ❌        | Less than or equal                          | ✅                |
-| `Op.lt`      | ❌        | Less than                                   | ✅                |
-| `Op.not`     | ❌        | Negation (`NOT`)                            | ✅                |
-| `Op.in`      | ✅        | Value must be in an array                   | ✅                |
-| `Op.notIn`   | ❌        | Value must not be in an array               | ✅                |
-| `Op.like`    | 🔶        | String matches pattern (only '%' char)      | 🔶                |
-| `Op.notLike` | ❌        | Does not match pattern                      | 🔶                |
-| `Op.iLike`   | ❌        | Case-insensitive LIKE (PostgreSQL only)     | ❌                |
-| `Op.notILike`| ❌        | Case-insensitive NOT LIKE                   | ❌                |
-| `Op.between` | ❌        | Between two values                          | ✅                |
-| `Op.notBetween`| ❌      | Not between two values                      | ✅                |
-| `Op.is`      | ❌        | IS NULL or IS NOT NULL                      | ✅                |
-| `Op.col`     | ❌        | Compare to another column                   | ❌                |
+| Operator        | Supported | Description                                  | In Roadmap for v1 |
+|-----------------|-----------|----------------------------------------------|-------------------|
+| `Op.eq`         | ✅        | Equal to                                    | ✅                |
+| `Op.ne`         | ✅        | Not equal                                   | ✅                |
+| `Op.gte`        | ✅        | Greater than or equal                       | ✅                |
+| `Op.gt`         | ✅        | Greater than                                | ✅                |
+| `Op.lte`        | ✅        | Lower than or equal                         | ✅                |
+| `Op.lt`         | ✅        | Lower than                                  | ✅                |
+| `Op.in`         | ✅        | Value must be in an array                   | ✅                |
+| `Op.notIn`      | ✅        | Value must not be in an array               | ✅                |
+| `Op.like`       | 🔶        | String matches pattern (only '%' char)      | 🔶                |
+| `Op.notLike`    | 🔶        | Does not match pattern  (only '%' char)     | 🔶                |
+| `Op.iLike`      | 🔶        | Case-insensitive LIKE  (only '%' char)      | 🔶                |
+| `Op.notILike`   | 🔶        | Case-insensitive NOT LIKE (only '%' char)   | 🔶                |
+| `Op.between`    | ✅        | Between two values                          | ✅                |
+| `Op.notBetween` | ✅        | Not between two values                      | ✅                |
+| `Op.is`         | ✅        | IS NULL or IS NOT NULL                      | ✅                |
+| `Op.isNot`      | ✅        | IS NULL or IS NOT NULL                      | ✅                |
+| `Op.col`        | ❌        | Compare to another column                   | ❌                |
+| `Op.regexP`     | ❌        | regex compare                               | ❌                |
+| `Op.notRegexP`  | ❌        | regex compare with not                      | ❌                |
+| `Op.iregexP`    | ❌        | regex compare case insensitive              | ❌                |
+| `Op.notIRegexP` | ❌        | regex compare with not and case insensitive | ❌                |
 
 ---
 
@@ -193,7 +197,7 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | `DATEONLY`           | ✅        | Date                                   | ✅               |
 | `TIME`               | ✅        | Time                                   | ✅               |
 | `NOW`                | ✅        | generate new Date() on defaultValue    | ✅               |
-| `UUID`               | ❌        | Validated via regex                    | ✅               |
+| `UUID`               | ❌        | Validated via regex                    | ❌               |
 | `ENUM`               | ❌        | Not yet supported                      | ❌               |
 | `JSON`               | ❌        | No structure validation on object      | ❌               |
 | `BLOB`               | ❌        | Not applicable (no binary handling)    | ❌               |

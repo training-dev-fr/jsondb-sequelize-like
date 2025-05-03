@@ -1,6 +1,7 @@
 import fs from "fs";
 import DeepSave from "./DeepSave.js";
 import { validate } from "./Validator.js";
+import Op from "./Operator.js";
 
 /**
  * Represent a model of data, with many method to manage data storage.
@@ -46,6 +47,12 @@ class Model {
          * @private
          */
         this.deepSave = new DeepSave(this.logname, this.filename, this.name, this.namespace);
+
+        if (!fs.existsSync("./" + this.namespace + "/history/" + this.logname)) {
+            fs.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
+        } else {
+            this.deepSave.save();
+        }
         if (!fs.existsSync("./" + this.namespace + "/" + this.filename)) {
             /**
              * @private
@@ -54,9 +61,6 @@ class Model {
             fs.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
         } else {
             this.data = JSON.parse(fs.readFileSync("./" + this.namespace + "/" + this.filename, { flag: "a+" }));
-        }
-        if (!fs.existsSync("./" + this.namespace + "/history/" + this.logname)) {
-            fs.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
         }
         this.deepSaveLauncher();
         /**
@@ -249,13 +253,8 @@ class Model {
      */
     checkWhereClause(element, options) {
         for (let [field, value] of Object.entries(options.where)) {
-            if (value.like) {
-                if (!this.checkLikeClause(element[field], value.like)) {
-                    return false;
-                }
-            }
-            else if (value.in) {
-                if (!this.checkInClause(element[field], value.in)) {
+            if (typeof value === "object") {
+                if (this.checkOperator({ type: Object.keys(value)[0], value }, element[field]) === false) {
                     return false;
                 }
             }
@@ -266,34 +265,7 @@ class Model {
         return true;
     }
 
-    /**
-     * Transform like query to js regex, and check if the corresponding element field check the constraint
-     * @param {string} field the value to check on the element
-     * @param {string} like the like constraint on query where options
-     * @returns true if the regex match the value, either false
-     * @private
-     */
-    checkLikeClause(field, like) {
-        if (typeof like !== "string") {
-            throw new Error("Like operator required an string value");
-        }
-        let regex = new RegExp(like.replaceAll('%', '.*'));
-        return regex.test(field);
-    }
 
-    /**
-     * Transform in query to js includes, and check if the corresponding element field check the constraint
-     * @param {string} field the value to check on the element
-     * @param {string} array the list of accepted value
-     * @returns true if the value is in the array, either false
-     * @private
-     */
-    checkInClause(field, array) {
-        if (!Array.isArray(array)) {
-            throw new Error("In operator required an array value");
-        }
-        return array.includes(field);
-    }
 
     /**
      * Check element match schema validation before insert and update queries
@@ -442,6 +414,190 @@ class Model {
             }
         }
         return errorStack;
+    }
+
+    checkOperator(operator, value) {
+        switch (operator.type) {
+            case "like":
+                if (!this.checkLikeClause(value, operator.value.like)) {
+                    return false;
+                }
+                break;
+            case "ilike":
+                if (!this.checkLikeClause(value, operator.value.ilike, true)) {
+                    return false;
+                }
+                break;
+            case "in":
+                if (!this.checkInClause(value, operator.value.in)) {
+                    return false;
+                }
+                break;
+            case "eq":
+                if (!this.checkEqClause(value, operator.value.eq)) {
+                    return false;
+                }
+                break;
+            case "ne":
+                if (this.checkEqClause(value, operator.value.ne)) {
+                    return false;
+                }
+                break;
+            case "gte":
+                if (!this.checkGtClause(value, operator.value.gte) && !this.checkEqClause(value, operator.value.gte)) {
+                    return false;
+                }
+                break;
+            case "gt":
+                if (!this.checkGtClause(value, operator.value.gt)) {
+                    return false;
+                }
+                break;
+            case "lte":
+                if (this.checkGtClause(value, operator.value.lte)) {
+                    return false;
+                }
+                break;
+            case "lt":
+                if (this.checkGtClause(value, operator.value.lt) || this.checkEqClause(value, operator.value.lt)) {
+                    return false;
+                }
+                break;
+            case "notIn":
+                if (this.checkInClause(value, operator.value.notIn)) {
+                    return false;
+                }
+                break;
+            case "notLike":
+                if (this.checkLikeClause(value, operator.value.notLike)) {
+                    return false;
+                }
+                break;
+            case "notLike":
+                if (this.checkLikeClause(value, operator.value.notLike,true)) {
+                    return false;
+                }
+                break;
+            case "between":
+                if (!this.checkBetweenClause(value, operator.value.between)) {
+                    return false;
+                }
+                break;
+            case "notBetween":
+                if (this.checkBetweenClause(value, operator.value.notBetween)) {
+                    return false;
+                }
+                break;
+            case "is":
+                if (!this.checkIsClause(value, operator.value.is)) {
+                    return false;
+                }
+                break;
+            case "isNot":
+                if (this.checkIsClause(value, operator.value.isNot)) {
+                    return false;
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * Transform like query to js regex, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {string} like the like constraint on query where options
+     * @returns true if the regex match the value, either false
+     * @private
+     */
+    checkLikeClause(field, like, insensitive = false) {
+        if (typeof like !== "string") {
+            throw new Error("Like operator required an string value");
+        }
+        let regex = new RegExp(like.replaceAll('%', '.*'), insensitive ? "i" : "");
+        return regex.test(field);
+    }
+
+    /**
+     * Transform in query to js includes, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {array} array the list of accepted value
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkInClause(field, array) {
+        if (!Array.isArray(array)) {
+            throw new Error("In operator required an array value");
+        }
+        return array.includes(field);
+    }
+
+    /**
+     * Transform eq query to js strict equal or value compare if type is complex (Object,Array), and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {*} value the value to compare
+     * @returns true if the value is equel, either false
+     * @private
+     */
+    checkEqClause(field, value) {
+        if (Array.isArray(field)) {
+            for (let index in field) {
+                if (field[index] !== value[index]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if (typeof field === "object") {
+            for (let [property, propertyValue] of Object.entries(field)) {
+                if (!value[property] || value[property] !== propertyValue) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return field === value;
+    }
+
+    /**
+     * Transform gt query to js compare, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {number} value the value to compare
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkGtClause(field, value) {
+        if (Number.parseFloat(value) !== value) {
+            throw new Error("Eq operator required a number value");
+        }
+        return field > value;
+    }
+
+    /**
+     * Transform is query to js compare, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {boolean} value the value to compare
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkIsClause(field, value) {
+        if (value !== true && value !== false && value !== null) {
+            throw new Error("Is operator required a boolean or null value");
+        }
+        return field === value;
+    }
+
+    /**
+ * Transform between query to js compare, and check if the corresponding element field check the constraint
+ * @param {string} field the value to check on the element
+ * @param {array[2]} value the value to compare 
+ * @returns true if the value is in the array, either false
+ * @private
+ */
+    checkBetweenClause(field, value) {
+        if (!Array.isArray(value) || value.length !== 2) {
+            throw new Error("Between operator required a array with two value");
+        }
+        return field >= value[0] && field <= value[1];
     }
 }
 

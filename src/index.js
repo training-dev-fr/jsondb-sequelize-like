@@ -1,6 +1,6 @@
 import {DataTypes} from "./DataTypes/DataTypes.js";
 import {Jdb} from "./jdb.js";
-import Operator from "./Operator.js";
+import Op from "./Operator.js";
 
 export  {Jdb};
-export {DataTypes, Operator};
+export {DataTypes, Op};
