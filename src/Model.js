@@ -223,7 +223,7 @@ class Model {
             this.addDefaultValue(element);
             errorStack = errorStack.concat(this.checkFieldExist(element));
             errorStack = errorStack.concat(this.checkFormat(element));
-            errorStack = errorStack.concat(this.checkRequired(element));
+            errorStack = errorStack.concat(this.checkAllowNull(element));
             errorStack = errorStack.concat(this.checkValidator(element));
             if (errorStack.length > 0) {
                 throw new Error("Validation failed", { cause: errorStack });
@@ -263,7 +263,7 @@ class Model {
             let errorStack = [];
             errorStack = errorStack.concat(this.checkFieldExist(elementToUpdate));
             errorStack = errorStack.concat(this.checkFormat(elementToUpdate));
-            errorStack = errorStack.concat(this.checkRequired(elementToUpdate));
+            errorStack = errorStack.concat(this.checkAllowNull(elementToUpdate));
             errorStack = errorStack.concat(this.checkValidator(elementToUpdate));
         } catch (e) {
             throw e;
@@ -396,12 +396,17 @@ class Model {
      * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
      * @private
      */
-    checkRequired(element) {
+    checkAllowNull(element) {
         let errorStack = [];
-        let required = Array.from(this.schema).filter(property => property.required && property.required === true);
-        for (let [property, options] of Object.entries(required)) {
+        /*let allowNull = Array.from(this.schema).filter(property => property.allowNull && property.allowNull === false);*/
+        for (let [property, options] of Object.entries(this.schema)) {
             if (!element[property]) {
-                errorStack.push(new Error("Error : property " + property + " is required"));
+                if(property.allowNull && property.allowNull === false){
+                    errorStack.push(new Error("Error : property " + property + " is required"));
+                }else{
+                    element[property] = null;
+                }
+                
             }
         }
         return errorStack;
