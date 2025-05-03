@@ -96,10 +96,12 @@ User.create({
 
 ## 🧪 Schema options (current support)
 
-- `type`: required — one of `DataTypes.STRING(length)`, `DataTypes.NUMBER()`
+- `type`: required — one of [DataTypes](./src/DataTypes/)
 - `unique`: boolean — ensures uniqueness in the dataset
-- `validate`: RegExp — validates the input on insert
-- *(Planned)*: `required`, `default`, additional types (`BOOLEAN`, `DATE`, etc.)
+- `validate`: validates the input on insert
+- `allowNull`: force a field to have a value
+- `defaultValue`: default value for a field if not specify
+- ...
 
 ---
 
