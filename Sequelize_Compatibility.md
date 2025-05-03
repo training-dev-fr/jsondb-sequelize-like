@@ -163,7 +163,7 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | `defaultValue`   | ✅        | Static value or function                     | ✅               |
 | `validate`       | ✅        | Validators object                            | ✅               |
 | `primaryKey`     | ❌        | Marks field as primary key                   | ❌               |
-| `autoIncrement`  | ❌        | Automatically incrementing integer           | ❌               |
+| `autoIncrement`  | 🔶        | Auto increment id (can not be disable yet)   | ✅               |
 | `comment`        | ❌        | Optional field comment (ignored in storage)  | ❌               |
 | `field`          | ❌        | Custom name for DB field (not relevant here) | ❌               |
 | `get` / `set`    | ❌        | Custom getters/setters                       | ❌               |
