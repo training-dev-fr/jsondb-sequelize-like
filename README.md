@@ -13,11 +13,12 @@ Ideal for embedded systems, CLIs, quick prototyping, or educational use.
 ## 🚀 Features
 
 - 💾 Flat-file JSON storage
-- 🧠 In-memory cache with periodic snapshot
-- ✍️ Append-only logging for safe writes
+- 🧠 In-memory cache with periodic snapshot (fast processing in history and cache, slow process of storing trigger periodically)
+- ✍️ Append-only sync history for safe writes (concurrency-free)
 - 🔍 SQL-like querying: `where`, `like`, `is`, etc.
 - 🧱 Schema definition with `DataTypes`, `unique`, `validation`, etc.
 - 🎯 Auto-incrementing primary keys
+- 🗓️ Auto save createdAt and updatedAt
 - ✅ Inspired by <a href="https://sequelize.org" target="_blank">Sequelize</a> syntax
 - 🔒 No external dependencies
 
