@@ -473,7 +473,7 @@ class Model {
                     return false;
                 }
                 break;
-            case "notLike":
+            case "notiLike":
                 if (this.checkLikeClause(value, operator.value.notLike,true)) {
                     return false;
                 }
