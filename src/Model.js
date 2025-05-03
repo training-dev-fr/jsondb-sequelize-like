@@ -702,12 +702,12 @@ class Model {
     }
 
     /**
- * Transform between query to js compare, and check if the corresponding element field check the constraint
- * @param {string} field the value to check on the element
- * @param {array[2]} value the value to compare 
- * @returns true if the value is in the array, either false
- * @private
- */
+     * Transform between query to js compare, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {array[]} value the value to compare 
+     * @returns true if the value is in the array, either false
+     * @private
+     */
     checkBetweenClause(field, value) {
         if (!Array.isArray(value) || value.length !== 2) {
             throw new Error("Between operator required a array with two value");

@@ -29,6 +29,7 @@
             <pre class="prettyprint source linenums"><code>import fs from "fs";
 import DeepSave from "./DeepSave.js";
 import { validate } from "./Validator.js";
+import Op from "./Operator.js";
 
 /**
  * Represent a model of data, with many method to manage data storage.
@@ -54,6 +55,17 @@ class Model {
          * @private
          */
         this.schema = schema;
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) &amp;&amp; (!this.schema.createdAt || this.schema.createdAt !== false)) {
+            this.schema.createdAt = {
+                type: Date,
+            }
+        }
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) &amp;&amp; (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
+            this.schema.updatedAt = {
+                type: Date,
+            }
+        }
+
         /**
          * @private
          */
@@ -74,6 +86,12 @@ class Model {
          * @private
          */
         this.deepSave = new DeepSave(this.logname, this.filename, this.name, this.namespace);
+
+        if (!fs.existsSync("./" + this.namespace + "/history/" + this.logname)) {
+            fs.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
+        } else {
+            this.deepSave.save();
+        }
         if (!fs.existsSync("./" + this.namespace + "/" + this.filename)) {
             /**
              * @private
@@ -82,9 +100,6 @@ class Model {
             fs.writeFileSync("./" + this.namespace + "/" + this.filename, "[]", { flag: "a+" });
         } else {
             this.data = JSON.parse(fs.readFileSync("./" + this.namespace + "/" + this.filename, { flag: "a+" }));
-        }
-        if (!fs.existsSync("./" + this.namespace + "/history/" + this.logname)) {
-            fs.writeFileSync("./" + this.namespace + "/history/" + this.logname, "", { flag: "a+" });
         }
         this.deepSaveLauncher();
         /**
@@ -125,47 +140,75 @@ class Model {
     }
 
     /**
-     * Read query to get all element of a model.
+     * Read query to get all elements of a model.
      * @param {Object} options various filtering options
      * @returns All elements matching filtering conditions
      */
     findAll(options) {
-        if (this.data.length === 0) {
-            return this.data;
-        }
-        let result = this.data;
-        if (options.where) {
-            result = result.filter(element => this.checkWhereClause(element, options));
-        }
-        if (options.order) {
-            result.sort((a, b) => {
-                for (let [property, order] of options.order) {
-                    if (a[property] &amp;&amp; !b[property]) {
-                        return 1;
-                    }
-                    if (!a[property] &amp;&amp; b[property]) {
-                        return -1;
-                    }
-                    if (a[property] &amp;&amp; b[property]) {
-                        if (order === 'DESC') {
+        try {
+            if (this.data.length === 0) {
+                return this.data;
+            }
+            let result = this.data;
+            if (options.where) {
+                result = result.filter(element => this.checkWhereClause(element, options));
+            }
+            if (options.order) {
+                result.sort((a, b) => {
+                    for (let [property, order] of options.order) {
+                        if (a[property] &amp;&amp; !b[property]) {
+                            return 1;
+                        }
+                        if (!a[property] &amp;&amp; b[property]) {
+                            return -1;
+                        }
+                        if (a[property] &amp;&amp; b[property]) {
+                            if (order === 'DESC') {
+                                if (a[property] !== b[property]) {
+                                    return a[property] &lt; b[property] ? 1 : -1;
+                                }
+                            }
                             if (a[property] !== b[property]) {
-                                return a[property] &lt; b[property] ? 1 : -1;
+                                return a[property] > b[property] ? 1 : -1;
                             }
                         }
-                        if (a[property] !== b[property]) {
-                            return a[property] > b[property] ? 1 : -1;
-                        }
                     }
+                })
+            }
+            if (options.offset) {
+                result = result.slice(options.offset)
+            }
+            if (options.limit) {
+                result = result.slice(0, options.limit);
+            }
+            if (options.attributes) {
+                return this.mapAttributes(result, options)
+            }
+            return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    mapAttributes(result, options) {
+        if (!Array.isArray(options.attributes)) {
+            throw new Error("Attributes must be an array of string");
+        }
+        let newResult = [];
+        for (let element of result) {
+            let newElement = {};
+            for (let attribute of options.attributes) {
+                if (typeof attribute !== "string") {
+                    throw new Error("Attributes must be an array of string");
                 }
-            })
+                if (typeof element[attributes] === 'undefined') {
+                    throw new Error("Attributes must correspond to data column name");
+                }
+                newElement = element[attribute];
+            }
+            newResult.push(newElement);
         }
-        if (options.offset) {
-            result = result.slice(options.offset)
-        }
-        if (options.limit) {
-            result = result.slice(0, options.limit);
-        }
-        return result;
+        return newResult;
     }
 
     /**
@@ -174,10 +217,72 @@ class Model {
      * @returns First element matching filtering conditions
      */
     findOne(options) {
-        if (!options.where &amp;&amp; this.data.length > 0) {
-            return this.data[0];
+        try {
+            let result = null;
+            if (!options.where &amp;&amp; this.data.length > 0) {
+                result = this.data[0];
+            }
+            result = this.data.find(element => this.checkWhereClause(element, options));
+            if (options.attributes) {
+                result = this.mapAttributes([result], options);
+                if (!Array.isArray(result) || result.length !== 1) {
+                    throw new Error("Error while trying to map attributes");
+                }
+                return result[0];
+            }
+        } catch (e) {
+            throw e;
         }
-        return this.data.find(element => this.checkWhereClause(element, options));
+    }
+
+    /**
+     * Read query to get the first element of a model by its id
+     * @param {int} id id to look for
+     * @returns First element with id
+     */
+    findByPk(id, options = {}) {
+        try {
+            options.where = {
+                id: id
+            }
+            return this.data.findOne(options);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Combo query to get the first element of a model corresponding to a condition, or create it, if it does not exist
+     * @param {Object} options various filtering options
+     * @returns First element matching filtering conditions
+     */
+    findOrCreate(options) {
+        try {
+            let element = this.findOne(options);
+            if (element) {
+                return element;
+            }
+            return this.create(options.defaults);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Read query to count elements of a model.
+     * @param {Object} options various filtering options
+     * @returns All elements matching filtering conditions
+     */
+    count(options) {
+        try {
+            let result = this.findAll(options);
+            if (result) {
+                return result.length;
+            }
+            return 0;
+        } catch (e) {
+            throw e;
+        }
     }
 
     /**
@@ -192,7 +297,7 @@ class Model {
             this.addDefaultValue(element);
             errorStack = errorStack.concat(this.checkFieldExist(element));
             errorStack = errorStack.concat(this.checkFormat(element));
-            errorStack = errorStack.concat(this.checkRequired(element));
+            errorStack = errorStack.concat(this.checkAllowNull(element));
             errorStack = errorStack.concat(this.checkValidator(element));
             if (errorStack.length > 0) {
                 throw new Error("Validation failed", { cause: errorStack });
@@ -203,8 +308,14 @@ class Model {
 
         const newElement = {
             ...element,
-            id: this.currentId + 1
+            id: this.currentId + 1,
         };
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) &amp;&amp; (!this.schema.createdAt || this.schema.createdAt !== false)) {
+            newElement.createdAt = Date.now();
+        }
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) &amp;&amp; (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
+            elementToUpdate.updatedAt = Date.now();
+        }
         this.data.push(newElement);
         try {
             this.save("add", newElement);
@@ -232,12 +343,15 @@ class Model {
             let errorStack = [];
             errorStack = errorStack.concat(this.checkFieldExist(elementToUpdate));
             errorStack = errorStack.concat(this.checkFormat(elementToUpdate));
-            errorStack = errorStack.concat(this.checkRequired(elementToUpdate));
+            errorStack = errorStack.concat(this.checkAllowNull(elementToUpdate));
             errorStack = errorStack.concat(this.checkValidator(elementToUpdate));
         } catch (e) {
             throw e;
         }
         try {
+            if ((!this.schema.timestamps || this.schema.timestamps !== false) &amp;&amp; (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
+                elementToUpdate.updatedAt = Date.now();
+            }
             this.save("update", elementToUpdate);
             return elementToUpdate;
         } catch (e) {
@@ -277,13 +391,8 @@ class Model {
      */
     checkWhereClause(element, options) {
         for (let [field, value] of Object.entries(options.where)) {
-            if (value.like) {
-                if (!this.checkLikeClause(element[field], value.like)) {
-                    return false;
-                }
-            }
-            else if (value.in) {
-                if (!this.checkInClause(element[field], value.in)) {
+            if (typeof value === "object") {
+                if (this.checkOperator({ type: Object.keys(value)[0], value }, element[field]) === false) {
                     return false;
                 }
             }
@@ -294,34 +403,7 @@ class Model {
         return true;
     }
 
-    /**
-     * Transform like query to js regex, and check if the corresponding element field check the constraint
-     * @param {string} field the value to check on the element
-     * @param {string} like the like constraint on query where options
-     * @returns true if the regex match the value, either false
-     * @private
-     */
-    checkLikeClause(field, like) {
-        if (typeof like !== "string") {
-            throw new Error("Like operator required an string value");
-        }
-        let regex = new RegExp(like.replaceAll('%', '.*'));
-        return regex.test(field);
-    }
 
-    /**
-     * Transform in query to js includes, and check if the corresponding element field check the constraint
-     * @param {string} field the value to check on the element
-     * @param {string} array the list of accepted value
-     * @returns true if the value is in the array, either false
-     * @private
-     */
-    checkInClause(field, array) {
-        if (!Array.isArray(array)) {
-            throw new Error("In operator required an array value");
-        }
-        return array.includes(field);
-    }
 
     /**
      * Check element match schema validation before insert and update queries
@@ -397,12 +479,17 @@ class Model {
      * @returns {Error[]} an array of error, if empty, the element passed all allowNull check
      * @private
      */
-    checkRequired(element) {
+    checkAllowNull(element) {
         let errorStack = [];
-        let required = Array.from(this.schema).filter(property => property.required &amp;&amp; property.required === true);
-        for (let [property, options] of Object.entries(required)) {
+        /*let allowNull = Array.from(this.schema).filter(property => property.allowNull &amp;&amp; property.allowNull === false);*/
+        for (let [property, options] of Object.entries(this.schema)) {
             if (!element[property]) {
-                errorStack.push(new Error("Error : property " + property + " is required"));
+                if (property.allowNull &amp;&amp; property.allowNull === false) {
+                    errorStack.push(new Error("Error : property " + property + " is required"));
+                } else {
+                    element[property] = null;
+                }
+
             }
         }
         return errorStack;
@@ -471,6 +558,190 @@ class Model {
         }
         return errorStack;
     }
+
+    checkOperator(operator, value) {
+        switch (operator.type) {
+            case Op.like:
+                if (!this.checkLikeClause(value, operator.value.like)) {
+                    return false;
+                }
+                break;
+            case Op.ilike:
+                if (!this.checkLikeClause(value, operator.value.ilike, true)) {
+                    return false;
+                }
+                break;
+            case Op.in:
+                if (!this.checkInClause(value, operator.value.in)) {
+                    return false;
+                }
+                break;
+            case Op.eq:
+                if (!this.checkEqClause(value, operator.value.eq)) {
+                    return false;
+                }
+                break;
+            case Op.ne:
+                if (this.checkEqClause(value, operator.value.ne)) {
+                    return false;
+                }
+                break;
+            case Op.gte:
+                if (!this.checkGtClause(value, operator.value.gte) &amp;&amp; !this.checkEqClause(value, operator.value.gte)) {
+                    return false;
+                }
+                break;
+            case Op.gt:
+                if (!this.checkGtClause(value, operator.value.gt)) {
+                    return false;
+                }
+                break;
+            case Op.lte:
+                if (this.checkGtClause(value, operator.value.lte)) {
+                    return false;
+                }
+                break;
+            case Op.lt:
+                if (this.checkGtClause(value, operator.value.lt) || this.checkEqClause(value, operator.value.lt)) {
+                    return false;
+                }
+                break;
+            case Op.notIn:
+                if (this.checkInClause(value, operator.value.notIn)) {
+                    return false;
+                }
+                break;
+            case Op.notLike:
+                if (this.checkLikeClause(value, operator.value.notLike)) {
+                    return false;
+                }
+                break;
+            case Op.notiLike:
+                if (this.checkLikeClause(value, operator.value.notLike, true)) {
+                    return false;
+                }
+                break;
+            case Op.between:
+                if (!this.checkBetweenClause(value, operator.value.between)) {
+                    return false;
+                }
+                break;
+            case Op.notBetween:
+                if (this.checkBetweenClause(value, operator.value.notBetween)) {
+                    return false;
+                }
+                break;
+            case Op.is:
+                if (!this.checkIsClause(value, operator.value.is)) {
+                    return false;
+                }
+                break;
+            case Op.isNot:
+                if (this.checkIsClause(value, operator.value.isNot)) {
+                    return false;
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * Transform like query to js regex, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {string} like the like constraint on query where options
+     * @returns true if the regex match the value, either false
+     * @private
+     */
+    checkLikeClause(field, like, insensitive = false) {
+        if (typeof like !== "string") {
+            throw new Error("Like operator required an string value");
+        }
+        let regex = new RegExp(like.replaceAll('%', '.*'), insensitive ? "i" : "");
+        return regex.test(field);
+    }
+
+    /**
+     * Transform in query to js includes, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {array} array the list of accepted value
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkInClause(field, array) {
+        if (!Array.isArray(array)) {
+            throw new Error("In operator required an array value");
+        }
+        return array.includes(field);
+    }
+
+    /**
+     * Transform eq query to js strict equal or value compare if type is complex (Object,Array), and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {*} value the value to compare
+     * @returns true if the value is equel, either false
+     * @private
+     */
+    checkEqClause(field, value) {
+        if (Array.isArray(field)) {
+            for (let index in field) {
+                if (field[index] !== value[index]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if (typeof field === "object") {
+            for (let [property, propertyValue] of Object.entries(field)) {
+                if (!value[property] || value[property] !== propertyValue) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return field === value;
+    }
+
+    /**
+     * Transform gt query to js compare, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {number} value the value to compare
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkGtClause(field, value) {
+        if (Number.parseFloat(value) !== value) {
+            throw new Error("Eq operator required a number value");
+        }
+        return field > value;
+    }
+
+    /**
+     * Transform is query to js compare, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {boolean} value the value to compare
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkIsClause(field, value) {
+        if (value !== true &amp;&amp; value !== false &amp;&amp; value !== null) {
+            throw new Error("Is operator required a boolean or null value");
+        }
+        return field === value;
+    }
+
+    /**
+     * Transform between query to js compare, and check if the corresponding element field check the constraint
+     * @param {string} field the value to check on the element
+     * @param {array[]} value the value to compare 
+     * @returns true if the value is in the array, either false
+     * @private
+     */
+    checkBetweenClause(field, value) {
+        if (!Array.isArray(value) || value.length !== 2) {
+            throw new Error("Between operator required a array with two value");
+        }
+        return field >= value[0] &amp;&amp; field &lt;= value[1];
+    }
 }
 
 export default Model;</code></pre>
@@ -489,7 +760,7 @@ export default Model;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat May 03 2025 08:26:20 GMT+0200 (heure d’été d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat May 03 2025 17:25:51 GMT+0200 (heure d’été d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>
