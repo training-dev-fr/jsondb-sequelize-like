@@ -27,12 +27,12 @@ class Model {
          * @private
          */
         this.schema = schema;
-        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)){
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)) {
             this.schema.createdAt = {
                 type: Date,
             }
         }
-        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)){
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
             this.schema.updatedAt = {
                 type: Date,
             }
@@ -153,10 +153,34 @@ class Model {
             if (options.limit) {
                 result = result.slice(0, options.limit);
             }
+            if (options.attributes) {
+                return this.mapAttributes(result, options)
+            }
             return result;
         } catch (e) {
             throw e;
         }
+    }
+
+    mapAttributes(result, options) {
+        if (!Array.isArray(options.attributes)) {
+            throw new Error("Attributes must be an array of string");
+        }
+        let newResult = [];
+        for (let element of result) {
+            let newElement = {};
+            for (let attribute of options.attributes) {
+                if (typeof attribute !== "string") {
+                    throw new Error("Attributes must be an array of string");
+                }
+                if (typeof element[attributes] === 'undefined') {
+                    throw new Error("Attributes must correspond to data column name");
+                }
+                newElement = element[attribute];
+            }
+            newResult.push(newElement);
+        }
+        return newResult;
     }
 
     /**
@@ -166,10 +190,18 @@ class Model {
      */
     findOne(options) {
         try {
+            let result = null;
             if (!options.where && this.data.length > 0) {
-                return this.data[0];
+                result = this.data[0];
             }
-            return this.data.find(element => this.checkWhereClause(element, options));
+            result = this.data.find(element => this.checkWhereClause(element, options));
+            if (options.attributes) {
+                result = this.mapAttributes([result], options);
+                if (!Array.isArray(result) || result.length !== 1) {
+                    throw new Error("Error while trying to map attributes");
+                }
+                return result[0];
+            }
         } catch (e) {
             throw e;
         }
@@ -180,9 +212,12 @@ class Model {
      * @param {int} id id to look for
      * @returns First element with id
      */
-    findByPk(id) {
+    findByPk(id, options = {}) {
         try {
-            return this.data.find(element => element.id === id);
+            options.where = {
+                id: id
+            }
+            return this.data.findOne(options);
         } catch (e) {
             throw e;
         }
@@ -195,7 +230,7 @@ class Model {
      */
     findOrCreate(options) {
         try {
-            let element = this.findOne(options.where);
+            let element = this.findOne(options);
             if (element) {
                 return element;
             }
@@ -247,10 +282,10 @@ class Model {
             ...element,
             id: this.currentId + 1,
         };
-        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)){
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)) {
             newElement.createdAt = Date.now();
         }
-        if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)){
+        if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
             elementToUpdate.updatedAt = Date.now();
         }
         this.data.push(newElement);
@@ -286,7 +321,7 @@ class Model {
             throw e;
         }
         try {
-            if((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)){
+            if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
                 elementToUpdate.updatedAt = Date.now();
             }
             this.save("update", elementToUpdate);
@@ -421,12 +456,12 @@ class Model {
         /*let allowNull = Array.from(this.schema).filter(property => property.allowNull && property.allowNull === false);*/
         for (let [property, options] of Object.entries(this.schema)) {
             if (!element[property]) {
-                if(property.allowNull && property.allowNull === false){
+                if (property.allowNull && property.allowNull === false) {
                     errorStack.push(new Error("Error : property " + property + " is required"));
-                }else{
+                } else {
                     element[property] = null;
                 }
-                
+
             }
         }
         return errorStack;
@@ -498,82 +533,82 @@ class Model {
 
     checkOperator(operator, value) {
         switch (operator.type) {
-            case "like":
+            case Op.like:
                 if (!this.checkLikeClause(value, operator.value.like)) {
                     return false;
                 }
                 break;
-            case "ilike":
+            case Op.ilike:
                 if (!this.checkLikeClause(value, operator.value.ilike, true)) {
                     return false;
                 }
                 break;
-            case "in":
+            case Op.in:
                 if (!this.checkInClause(value, operator.value.in)) {
                     return false;
                 }
                 break;
-            case "eq":
+            case Op.eq:
                 if (!this.checkEqClause(value, operator.value.eq)) {
                     return false;
                 }
                 break;
-            case "ne":
+            case Op.ne:
                 if (this.checkEqClause(value, operator.value.ne)) {
                     return false;
                 }
                 break;
-            case "gte":
+            case Op.gte:
                 if (!this.checkGtClause(value, operator.value.gte) && !this.checkEqClause(value, operator.value.gte)) {
                     return false;
                 }
                 break;
-            case "gt":
+            case Op.gt:
                 if (!this.checkGtClause(value, operator.value.gt)) {
                     return false;
                 }
                 break;
-            case "lte":
+            case Op.lte:
                 if (this.checkGtClause(value, operator.value.lte)) {
                     return false;
                 }
                 break;
-            case "lt":
+            case Op.lt:
                 if (this.checkGtClause(value, operator.value.lt) || this.checkEqClause(value, operator.value.lt)) {
                     return false;
                 }
                 break;
-            case "notIn":
+            case Op.notIn:
                 if (this.checkInClause(value, operator.value.notIn)) {
                     return false;
                 }
                 break;
-            case "notLike":
+            case Op.notLike:
                 if (this.checkLikeClause(value, operator.value.notLike)) {
                     return false;
                 }
                 break;
-            case "notiLike":
+            case Op.notiLike:
                 if (this.checkLikeClause(value, operator.value.notLike, true)) {
                     return false;
                 }
                 break;
-            case "between":
+            case Op.between:
                 if (!this.checkBetweenClause(value, operator.value.between)) {
                     return false;
                 }
                 break;
-            case "notBetween":
+            case Op.notBetween:
                 if (this.checkBetweenClause(value, operator.value.notBetween)) {
                     return false;
                 }
                 break;
-            case "is":
+            case Op.is:
                 if (!this.checkIsClause(value, operator.value.is)) {
                     return false;
                 }
                 break;
-            case "isNot":
+            case Op.isNot:
                 if (this.checkIsClause(value, operator.value.isNot)) {
                     return false;
                 }
