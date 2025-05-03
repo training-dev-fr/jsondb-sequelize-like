@@ -101,47 +101,51 @@ class Model {
     }
 
     /**
-     * Read query to get all element of a model.
+     * Read query to get all elements of a model.
      * @param {Object} options various filtering options
      * @returns All elements matching filtering conditions
      */
     findAll(options) {
-        if (this.data.length === 0) {
-            return this.data;
-        }
-        let result = this.data;
-        if (options.where) {
-            result = result.filter(element => this.checkWhereClause(element, options));
-        }
-        if (options.order) {
-            result.sort((a, b) => {
-                for (let [property, order] of options.order) {
-                    if (a[property] && !b[property]) {
-                        return 1;
-                    }
-                    if (!a[property] && b[property]) {
-                        return -1;
-                    }
-                    if (a[property] && b[property]) {
-                        if (order === 'DESC') {
+        try {
+            if (this.data.length === 0) {
+                return this.data;
+            }
+            let result = this.data;
+            if (options.where) {
+                result = result.filter(element => this.checkWhereClause(element, options));
+            }
+            if (options.order) {
+                result.sort((a, b) => {
+                    for (let [property, order] of options.order) {
+                        if (a[property] && !b[property]) {
+                            return 1;
+                        }
+                        if (!a[property] && b[property]) {
+                            return -1;
+                        }
+                        if (a[property] && b[property]) {
+                            if (order === 'DESC') {
+                                if (a[property] !== b[property]) {
+                                    return a[property] < b[property] ? 1 : -1;
+                                }
+                            }
                             if (a[property] !== b[property]) {
-                                return a[property] < b[property] ? 1 : -1;
+                                return a[property] > b[property] ? 1 : -1;
                             }
                         }
-                        if (a[property] !== b[property]) {
-                            return a[property] > b[property] ? 1 : -1;
-                        }
                     }
-                }
-            })
+                })
+            }
+            if (options.offset) {
+                result = result.slice(options.offset)
+            }
+            if (options.limit) {
+                result = result.slice(0, options.limit);
+            }
+            return result;
+        } catch (e) {
+            throw e;
         }
-        if (options.offset) {
-            result = result.slice(options.offset)
-        }
-        if (options.limit) {
-            result = result.slice(0, options.limit);
-        }
-        return result;
     }
 
     /**
@@ -150,10 +154,61 @@ class Model {
      * @returns First element matching filtering conditions
      */
     findOne(options) {
-        if (!options.where && this.data.length > 0) {
-            return this.data[0];
+        try {
+            if (!options.where && this.data.length > 0) {
+                return this.data[0];
+            }
+            return this.data.find(element => this.checkWhereClause(element, options));
+        } catch (e) {
+            throw e;
         }
-        return this.data.find(element => this.checkWhereClause(element, options));
+    }
+
+    /**
+     * Read query to get the first element of a model by its id
+     * @param {int} id id to look for
+     * @returns First element with id
+     */
+    findByPk(id) {
+        try {
+            return this.data.find(element => element.id === id);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Combo query to get the first element of a model corresponding to a condition, or create it, if it does not exist
+     * @param {Object} options various filtering options
+     * @returns First element matching filtering conditions
+     */
+    findOrCreate(options) {
+        try {
+            let element = this.findOne(options.where);
+            if (element) {
+                return element;
+            }
+            return this.create(options.defaults);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Read query to count elements of a model.
+     * @param {Object} options various filtering options
+     * @returns All elements matching filtering conditions
+     */
+    count(options) {
+        try {
+            let result = this.findAll(options);
+            if (result) {
+                return result.length;
+            }
+            return 0;
+        } catch (e) {
+            throw e;
+        }
     }
 
     /**
@@ -474,7 +529,7 @@ class Model {
                 }
                 break;
             case "notiLike":
-                if (this.checkLikeClause(value, operator.value.notLike,true)) {
+                if (this.checkLikeClause(value, operator.value.notLike, true)) {
                     return false;
                 }
                 break;

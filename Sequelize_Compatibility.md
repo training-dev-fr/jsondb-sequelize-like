@@ -28,9 +28,7 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 | `destroy`      | ✅        | removes items                      | ✅                |
 | `findAll`      | ✅        | get all items matching conditions  | ✅                |
 | `findOne`      | ✅        | get first item matching conditions | ✅                |
-| `findById`     | ❌        | get item by is id                  | ✅                |
-| `updateById`   | ❌        | update item by is id               | ✅                |
-| `destroyById`  | ❌        | remove item by is id               | ✅                |
+| `findByPk`     | ✅        | get item by is id                  | ✅                |
 | `count`        | ❌        | count items matching conditions    | ✅                |
 | `exists`       | ❌        | Not implemented                    | ❌                |
 | `bulkCreate`   | ❌        | Not implemented                    | ❌                |
