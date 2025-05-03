@@ -115,27 +115,31 @@ If you are waiting for a functionnality in v1 Roadmap, check this file often,it 
 
 | Operator        | Supported | Description                                  | In Roadmap for v1 |
 |-----------------|-----------|----------------------------------------------|-------------------|
-| `Op.eq`         | ✅        | Equal to                                    | ✅                |
-| `Op.ne`         | ✅        | Not equal                                   | ✅                |
-| `Op.gte`        | ✅        | Greater than or equal                       | ✅                |
-| `Op.gt`         | ✅        | Greater than                                | ✅                |
-| `Op.lte`        | ✅        | Lower than or equal                         | ✅                |
-| `Op.lt`         | ✅        | Lower than                                  | ✅                |
-| `Op.in`         | ✅        | Value must be in an array                   | ✅                |
-| `Op.notIn`      | ✅        | Value must not be in an array               | ✅                |
-| `Op.like`       | 🔶        | String matches pattern (only '%' char)      | 🔶                |
-| `Op.notLike`    | 🔶        | Does not match pattern  (only '%' char)     | 🔶                |
-| `Op.iLike`      | 🔶        | Case-insensitive LIKE  (only '%' char)      | 🔶                |
-| `Op.notILike`   | 🔶        | Case-insensitive NOT LIKE (only '%' char)   | 🔶                |
-| `Op.between`    | ✅        | Between two values                          | ✅                |
-| `Op.notBetween` | ✅        | Not between two values                      | ✅                |
-| `Op.is`         | ✅        | IS NULL or IS NOT NULL                      | ✅                |
-| `Op.isNot`      | ✅        | IS NULL or IS NOT NULL                      | ✅                |
-| `Op.col`        | ❌        | Compare to another column                   | ❌                |
-| `Op.regexP`     | ❌        | regex compare                               | ❌                |
-| `Op.notRegexP`  | ❌        | regex compare with not                      | ❌                |
-| `Op.iregexP`    | ❌        | regex compare case insensitive              | ❌                |
-| `Op.notIRegexP` | ❌        | regex compare with not and case insensitive | ❌                |
+| `Op.eq`            | ✅        | Equal to                                    | ✅                |
+| `Op.ne`            | ✅        | Not equal                                   | ✅                |
+| `Op.gte`           | ✅        | Greater than or equal                       | ✅                |
+| `Op.gt`            | ✅        | Greater than                                | ✅                |
+| `Op.lte`           | ✅        | Lower than or equal                         | ✅                |
+| `Op.lt`            | ✅        | Lower than                                  | ✅                |
+| `Op.in`            | ✅        | Value must be in an array                   | ✅                |
+| `Op.notIn`         | ✅        | Value must not be in an array               | ✅                |
+| `Op.like`          | 🔶        | String matches pattern (only '%' char)      | 🔶                |
+| `Op.notLike`       | 🔶        | Does not match pattern  (only '%' char)     | 🔶                |
+| `Op.iLike`         | 🔶        | Case-insensitive LIKE  (only '%' char)      | 🔶                |
+| `Op.notILike`      | 🔶        | Case-insensitive NOT LIKE (only '%' char)   | 🔶                |
+| `Op.between`       | ✅        | Between two values                          | ✅                |
+| `Op.notBetween`    | ✅        | Not between two values                      | ✅                |
+| `Op.is`            | ✅        | IS NULL or IS NOT NULL                      | ✅                |
+| `Op.isNot`         | ✅        | IS NULL or IS NOT NULL                      | ✅                |
+| `Op.col`           | ❌        | Compare to another column                   | ❌                |
+| `Op.regexP`        | ❌        | regex compare                               | ❌                |
+| `Op.notRegexP`     | ❌        | regex compare with not                      | ❌                |
+| `Op.iregexP`       | ❌        | regex compare case insensitive              | ❌                |
+| `Op.notIRegexP`    | ❌        | regex compare with not and case insensitive | ❌                |
+| `Op.startsWith`    | ❌        | check if string starts with                 | ✅                |
+| `Op.notStartsWith` | ❌        | check if string not starts with             | ✅                |
+| `Op.endsWith`      | ❌        | check if string ends with                   | ✅                |
+| `Op.notEndsWith`   | ❌        | check if string not ends with               | ✅                |
 
 ---
 
