@@ -102,40 +102,40 @@ class Model {
      * @returns All elements matching filtering conditions
      */
     findAll(options) {
-        if(this.data.length===0){
+        if (this.data.length === 0) {
             return this.data;
         }
         let result = this.data;
         if (options.where) {
             result = result.filter(element => this.checkWhereClause(element, options));
         }
-        if(options.order){
-            result.sort((a,b) => {
-                for(let [property,order] of options.order){
-                    if(a[property] && !b[property]){
+        if (options.order) {
+            result.sort((a, b) => {
+                for (let [property, order] of options.order) {
+                    if (a[property] && !b[property]) {
                         return 1;
                     }
-                    if(!a[property] && b[property]){
+                    if (!a[property] && b[property]) {
                         return -1;
                     }
-                    if(a[property] && b[property]){
-                        if(order === 'DESC'){
-                            if(a[property] !== b[property]){
-                                return a[property] < b[property]?1:-1;
+                    if (a[property] && b[property]) {
+                        if (order === 'DESC') {
+                            if (a[property] !== b[property]) {
+                                return a[property] < b[property] ? 1 : -1;
                             }
                         }
-                        if(a[property] !== b[property]){
-                            return a[property] > b[property]?1:-1; 
+                        if (a[property] !== b[property]) {
+                            return a[property] > b[property] ? 1 : -1;
                         }
                     }
                 }
             })
         }
-        if(options.offset){
+        if (options.offset) {
             result = result.slice(options.offset)
         }
-        if(options.limit){
-            result = result.slice(0,options.limit);
+        if (options.limit) {
+            result = result.slice(0, options.limit);
         }
         return result;
     }
@@ -307,8 +307,8 @@ class Model {
             if (typeof value !== this.schema[property].type.type) {
                 errorStack.push(new Error("Error : property " + property + " must be of type " + this.schema[property].type.type));
             }
-            if (this.schema[property].type.max && value.length > this.schema[property].type.max) {
-                errorStack.push(new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most"));
+            if (this.schema[property].type.min || this.schema[property].type.max) {
+                errorStack = errorStack.concat(this.checkType(property, value));
             }
             if (this.schema[property].unique) {
                 let result = this.checkUnique(property, value);
@@ -316,6 +316,49 @@ class Model {
                     errorStack.push(new Error("Error : property " + property + " must be unique"));
                 }
             }
+        }
+        return errorStack;
+    }
+
+    checkType(property, value) {
+        let errorStack = [];
+        switch (this.schema[property].type) {
+            case "string":
+                if (this.schema[property].type.max && value.length > this.schema[property].type.max) {
+                    errorStack.push(new Error("Error : property " + property + " must have " + this.schema[property].type.max + " at most"));
+                }
+                break;
+            case "number":
+                if (this.schema[property].type.max && value > this.schema[property].type.max) {
+                    errorStack.push(new Error("Error : property " + property + " can not be greater than " + this.schema[property].type.max));
+                }
+                if (this.schema[property].type.min && value < this.schema[property].type.min) {
+                    errorStack.push(new Error("Error : property " + property + " can not be lower than " + this.schema[property].type.max));
+                }
+                if (this.schema[property].special && this.schema[property].special === "integer") {
+                    if (!Number.isInteger(value)) {
+                        errorStack.push(new Error("Error : property " + property + " must be an integer value"));
+                    }
+                }
+                if (this.schema[property].special && ["float", "double", "decimal"].includes(this.schema[property].special)) {
+                    if (Number(value) !== value) {
+                        errorStack.push(new Error("Error : property " + property + " must be an number value"));
+                    }
+                    if (this.schema[property].precision) {
+                        if (value.toString().replace('.', '').replace('-', '').length > this.schema[property].precision) {
+                            errorStack.push(new Error("Error : property " + property + " can not exceed " + this.schema[property].precision + " digits"));
+                        }
+                    }
+                    if (this.schema[property].scale) {
+                        let splitNumber = value.split('.');
+                        if (splitNumber.length > 1) {
+                            if (splitNumber[2].toString().length > this.schema[property].scale) {
+                                errorStack.push(new Error("Error : property " + property + " can not have more than " + this.schema[property].scale + " decimals digits"));
+                            }
+                        }
+                    }
+                }
+                break;
         }
         return errorStack;
     }

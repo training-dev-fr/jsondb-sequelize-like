@@ -205,7 +205,6 @@ DataTypes.FLOAT(10,2) -- with precision
 DataTypes.FLOAT.UNSIGNED() -- no precision
 DataTypes.FLOAT.UNSIGNED(10,2) -- with precision
 
-For now, Datatypes exists, but almost no validation rules are implemented, to come soon
 ---
 
 ## ❌ Not Supported / Out of Scope
