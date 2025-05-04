@@ -2,6 +2,8 @@ import fs from "fs";
 import DeepSave from "./DeepSave.js";
 import { validate } from "./Validator.js";
 import Op from "./Operator.js";
+import { DataTypes } from "./DataTypes/DataTypes.js";
+import { Entity } from "./Entity.js";
 
 /**
  * Represent a model of data, with many method to manage data storage.
@@ -27,14 +29,17 @@ class Model {
          * @private
          */
         this.schema = schema;
+        this.schema.id = {
+            type: DataTypes.INTEGER
+        }
         if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.createdAt || this.schema.createdAt !== false)) {
             this.schema.createdAt = {
-                type: Date,
+                type: DataTypes.DATE,
             }
         }
         if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
             this.schema.updatedAt = {
-                type: Date,
+                type: DataTypes.DATE,
             }
         }
 
@@ -119,7 +124,7 @@ class Model {
     findAll(options) {
         try {
             if (this.data.length === 0) {
-                return this.data;
+                return this.data.map(element => new Entity(element, this, options.attributes));
             }
             let result = this.data;
             if (options.where) {
@@ -153,34 +158,10 @@ class Model {
             if (options.limit) {
                 result = result.slice(0, options.limit);
             }
-            if (options.attributes) {
-                return this.mapAttributes(result, options)
-            }
-            return result;
+            return result.map(element => new Entity(element, this, options.attributes));
         } catch (e) {
             throw e;
         }
-    }
-
-    mapAttributes(result, options) {
-        if (!Array.isArray(options.attributes)) {
-            throw new Error("Attributes must be an array of string");
-        }
-        let newResult = [];
-        for (let element of result) {
-            let newElement = {};
-            for (let attribute of options.attributes) {
-                if (typeof attribute !== "string") {
-                    throw new Error("Attributes must be an array of string");
-                }
-                if (typeof element[attributes] === 'undefined') {
-                    throw new Error("Attributes must correspond to data column name");
-                }
-                newElement = element[attribute];
-            }
-            newResult.push(newElement);
-        }
-        return newResult;
     }
 
     /**
@@ -195,12 +176,10 @@ class Model {
                 result = this.data[0];
             }
             result = this.data.find(element => this.checkWhereClause(element, options));
-            if (options.attributes) {
-                result = this.mapAttributes([result], options);
-                if (!Array.isArray(result) || result.length !== 1) {
-                    throw new Error("Error while trying to map attributes");
-                }
-                return result[0];
+            if (result) {
+                return new Entity(result, this, options.attributes)
+            } else {
+                return undefined;
             }
         } catch (e) {
             throw e;
@@ -286,7 +265,7 @@ class Model {
             newElement.createdAt = Date.now();
         }
         if ((!this.schema.timestamps || this.schema.timestamps !== false) && (!this.schema.updatedAt || this.schema.updatedAt !== false)) {
-            elementToUpdate.updatedAt = Date.now();
+            newElement.updatedAt = Date.now();
         }
         this.data.push(newElement);
         try {
@@ -713,6 +692,75 @@ class Model {
             throw new Error("Between operator required a array with two value");
         }
         return field >= value[0] && field <= value[1];
+    }
+
+    hasOne(model, { allowNull } = { allowNull: false }) {
+        if (!model instanceof Model) {
+            throw new Error("Model must be passed to associate");
+        }
+        this.schema[model.name + "Id"] = {
+            model: model,
+            type: DataTypes.INTEGER,
+            association: "hasOne",
+            allowNull: allowNull
+        }
+    }
+
+    hasMany(model, { allowNull } = { allowNull: false }) {
+        if (!model instanceof Model) {
+            throw new Error("Model must be passed to associate");
+        }
+        this.schema[model.name + "Id"] = {
+            model: model,
+            type: DataTypes.INTEGER,
+            association: "hasMany",
+            allowNull: allowNull
+        }
+    }
+
+    belongsTo(model, { allowNull } = { allowNull: false }) {
+        if (!model instanceof Model) {
+            throw new Error("Model must be passed to associate");
+        }
+        this.schema[model.name + "Id"] = {
+            model: model,
+            type: DataTypes.INTEGER,
+            association: "belongsTo",
+            allowNull: allowNull
+        }
+    }
+
+    belongsToMany(model, { allowNull } = { allowNull: false }) {
+        if (!model instanceof Model) {
+            throw new Error("Model must be passed to associate");
+        }
+        if (!options.through) {
+            throw new Error("Belongs to many relation need to specify a n-n table with through option")
+        }
+        let nModel = new Model(options.through, {
+            [this.name + id]: {
+                model: this,
+                type: DataTypes.INTEGER,
+                association: "hasMany",
+                allowNull: false
+            },
+            [model.name + id]: {
+                model: model,
+                type: DataTypes.INTEGER,
+                association: "hasMany",
+                allowNull: false
+            }
+        }, { namespace: this.namespace, deepSaveTiming: this.deepSaveTiming });
+        this.schema[model.name + "Id"] = {
+            model: nModel,
+            type: DataTypes.INTEGER,
+            association: "belongsToMany",
+            allowNull: allowNull
+        }
+        this["add" + model.name[0].toUpperCase() + model.name.substring(1)] = function (entity) {
+            //add check method to register data to through table
+        }
+
     }
 }
 

@@ -1,4 +1,5 @@
 import User from './user.schema.js';
+import Role from './role.schema.js';
 import { Op } from '../src/index.js';
 
 try {
@@ -20,8 +21,13 @@ try {
 //         email: "aurelien.vaast@yopmail.com",
 //         password: "1235456"
 //     });
+    
+    User.hasOne(Role);
     let result = User.findAll({ where:{email:{[Op.like]: "%vaast%"}}});
-    console.log(result);
+    console.log(JSON.stringify(result));
+    
+    //User.hasMany(Message, {foreignKey: senderId, })
+    /*console.log(result);*/
 } catch (e) {
     console.error(e);
 }

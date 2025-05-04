@@ -15,12 +15,18 @@ class Jdb {
     constructor({namespace, deepSaveTiming} = {namespace:"data",deepSaveTiming: 1000*60*5}) {
         this.namespace = namespace;
         this.deepSaveTiming = deepSaveTiming;
+        this.listModel = [];
         if (!fs.existsSync('./' + this.namespace)) {
             fs.mkdirSync('./' + this.namespace + '/history', { recursive: true });
         }
     }
     define(name, schema) {
-        return new Model(name, schema, {namespace: this.namespace,deepSaveTiming: this.deepSaveTiming});
+        if(this.listModel.some(model => model.name === name)){
+            throw new Error(name + " model already exists");
+        }
+        let model = new Model(name, schema, {namespace: this.namespace,deepSaveTiming: this.deepSaveTiming});
+        this.listModel.push(model);
+        return model;
     }
 }
 
